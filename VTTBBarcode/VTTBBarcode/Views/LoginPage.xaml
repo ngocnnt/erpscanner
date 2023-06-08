@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:sfbutton="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+             xmlns:sfinputText="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms"        
+             x:Class="VTTBBarcode.Views.LoginPage"   >
+    <ContentPage.Resources>
+        <Style TargetType="Entry" Class="entryClass">
+            <Setter Property="FontAttributes" Value="Bold"></Setter>
+            <Setter Property="TextColor" Value="#2905a1"></Setter>
+            <Setter Property="PlaceholderColor" Value="#3dcc63"></Setter>
+            <Setter Property="FontSize" Value="16"></Setter>
+            <Setter Property="BackgroundColor" Value="White"></Setter>
+        </Style>
+
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <Grid>
+            <Image Source="loginbackground.png" 
+                   Aspect="AspectFill"></Image>
+
+            <Grid Margin="{OnPlatform Android='20,40,20,0', iOS='20,70,20,0'}" RowSpacing="10"  >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="60"/>
+                </Grid.RowDefinitions>
+                <Image Source="logo.png" Grid.Row="0"></Image>
+
+
+                <StackLayout Orientation="Vertical" Padding="10,20,10,0" Grid.Row="1" >
+                    <sfinputText:SfTextInputLayout Hint="Tên đăng nhập" FocusedColor="MediumSpringGreen" 
+                                               ContainerType="Outlined" 
+                                               LeadingViewPosition="Inside">
+                        <Entry x:Name="btnusername" HeightRequest="{OnPlatform Android='50', iOS='40'}"
+                           Text="{Binding FullName , Mode=TwoWay}" FontSize="16"
+                           StyleClass="entryClass"  ClearButtonVisibility="WhileEditing"></Entry>
+                        <sfinputText:SfTextInputLayout.LeadingView>
+                            <Image Source="user.png"/>
+                        </sfinputText:SfTextInputLayout.LeadingView>
+                        <sfinputText:SfTextInputLayout.HintLabelStyle>
+                            <sfinputText:LabelStyle FontSize="18" FontAttributes="Bold"  />
+                        </sfinputText:SfTextInputLayout.HintLabelStyle>
+                    </sfinputText:SfTextInputLayout>
+
+
+                </StackLayout>
+
+                <StackLayout Orientation="Vertical" Padding="10,-15,10,0" Grid.Row="2">
+                    <sfinputText:SfTextInputLayout Hint="Nhập mật khẩu" FocusedColor="MediumSpringGreen"  
+                                               ContainerType="Outlined"
+                                               LeadingViewPosition="Inside"
+                                               EnablePasswordVisibilityToggle="True"                                               
+                                               >
+                        <Entry x:Name="btnpassword" FontSize="16" HeightRequest="{OnPlatform Android='50', iOS='40'}"
+                           Text="{Binding Password ,Mode=TwoWay}" 
+                           StyleClass="entryClass" ClearButtonVisibility="WhileEditing" IsPassword="True"></Entry>
+                        <sfinputText:SfTextInputLayout.LeadingView>
+                            <Image Source="password.png"/>
+                        </sfinputText:SfTextInputLayout.LeadingView>
+                        <sfinputText:SfTextInputLayout.HintLabelStyle>
+                            <sfinputText:LabelStyle FontSize="18" FontAttributes="Bold">
+                            </sfinputText:LabelStyle>
+                        </sfinputText:SfTextInputLayout.HintLabelStyle>
+                    </sfinputText:SfTextInputLayout>
+
+
+                </StackLayout>
+                <StackLayout Grid.Row="3"   Margin="10,-10,10,5" HeightRequest="30" Orientation="Horizontal">
+                    <!--<sfbutton:SfSwitch VisualType="Material" x:Name="swRememer" IsEnabled="True" IsOn="True"  HeightRequest="30">
+
+                    </sfbutton:SfSwitch>-->
+                    <sfbutton:SfSwitch x:Name="sfSwitch" IsOn="{Binding ToggledNhoPass}" StateChanged="sfSwitch_StateChanged" IsEnabled="True" HorizontalOptions="Start" VerticalOptions="FillAndExpand" VisualType="Cupertino" >
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="On">
+                                    <VisualState.Setters>
+                                        <Setter Property="SwitchSettings">
+                                            <Setter.Value>
+                                                <sfbutton:CupertinoSwitchSettings x:TypeArguments="sfbutton:OnState" ThumbColor="#3dcc63" TrackColor="#d1ffd1"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Off">
+                                    <VisualState.Setters>
+                                        <Setter Property="SwitchSettings">
+                                            <Setter.Value>
+                                                <sfbutton:CupertinoSwitchSettings x:TypeArguments="sfbutton:OffState" ThumbColor="#82807a" TrackColor="#d9d7d2"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </sfbutton:SfSwitch>
+                    <StackLayout x:Name="ButtonLayout" >
+                        <Label Text ="Ghi Nhớ" FontSize="Medium"  x:Name="lblNhoTOi" VerticalOptions="FillAndExpand" VerticalTextAlignment="Center"/>
+                    </StackLayout>
+                </StackLayout>
+                <StackLayout Grid.Row="6" VerticalOptions="Fill" Padding="10,0,10,0">
+
+                    <sfbutton:SfButton Text="Đăng Nhập"                                  
+                    CornerRadius="60"                   
+                    BackgroundColor="ForestGreen"    
+                    TextColor="White"
+                    Command="{Binding LoginCommand}" HeightRequest="60"
+                    FontSize="Large"/>
+                </StackLayout>
+
+                <StackLayout Grid.Row="8" Orientation="Vertical" VerticalOptions="CenterAndExpand" HorizontalOptions="Center">
+                    <Label Text="@2022 EVN CPC" HorizontalTextAlignment="Center"/>
+
+                </StackLayout>
+
+
+            </Grid>
+        </Grid>
+        
+    </ContentPage.Content>
+</ContentPage>

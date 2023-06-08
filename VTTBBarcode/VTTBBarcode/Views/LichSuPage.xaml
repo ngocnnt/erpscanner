@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="VTTBBarcode.Views.LichSuPage"
+             xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms" 
+             xmlns:sfGrid="clr-namespace:Syncfusion.SfDataGrid.XForms;assembly=Syncfusion.SfDataGrid.XForms" 
+             xmlns:sfPopup="clr-namespace:Syncfusion.XForms.PopupLayout;assembly=Syncfusion.SfPopupLayout.XForms"
+             xmlns:local="clr-namespace:VTTBBarcode.Helpers" 
+             Title="{Binding Title}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Color x:Key="Accent">#96d1ff</Color>
+            <local:GridStyle x:Key="styleGrid"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Spacing="0" Margin="5,10,5,0">
+
+        <StackLayout BackgroundColor="Transparent" Orientation="Horizontal" HorizontalOptions="StartAndExpand" Margin="{OnPlatform Android='5,0,5,5', iOS='20,40,0,10'}" >
+            <StackLayout.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding BackCommand}"/>
+            </StackLayout.GestureRecognizers>
+            <Image HeightRequest="20" WidthRequest="20" Margin="5,0,-5,0" Aspect="AspectFit">
+                <Image.Source>
+                    <FontImageSource FontFamily="UserIcons" Glyph="{Binding Source={x:Static local:FontIconClass.ChevronLeft}}" Size="30" Color="Black" />
+                </Image.Source>
+            </Image>
+            <Label Text="Back" TextColor="Black"  FontSize="17" HorizontalOptions="End"></Label>
+        </StackLayout>
+        
+        <StackLayout Orientation="Horizontal" HeightRequest="30" BackgroundColor="Transparent" HorizontalOptions="FillAndExpand">
+            <Label Text="Danh sách lô đã thực hiện" TextColor="#4EAF50" FontSize="20" FontAttributes="Bold" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" />
+        </StackLayout>
+        <StackLayout VerticalOptions="FillAndExpand">
+            <Grid x:Name="mGridLayout" AbsoluteLayout.LayoutFlags="All" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" 
+                         AbsoluteLayout.LayoutBounds="1,1,1,1" >
+                <sfGrid:SfDataGrid x:Name="gridMaCode" 
+                                   ItemsSource="{Binding LichSu,Mode=TwoWay}"
+                                   SelectedItem="{Binding SelectItem,Mode=TwoWay}"
+                                   Style="{StaticResource styleDataGrid}"    
+                                   GridStyle="{StaticResource styleGrid}"     
+                                   SelectionMode="Single"     
+                                   SelectionChanged="gridMaCode_SelectionChanged">
+                    <sfGrid:SfDataGrid.Columns >
+                        <sfGrid:GridTextColumn MappingName="STT" HeaderFontAttribute="Bold" HeaderCellTextSize="16" MinimumWidth="10"/>
+                        <sfGrid:GridTextColumn MappingName="TenFile" HeaderText="Lô" HeaderFontAttribute="Bold" HeaderCellTextSize="16" MinimumWidth="210"/>
+                        <sfGrid:GridDateTimeColumn MappingName="NgayXL" HeaderText="Ngày TH" HeaderFontAttribute="Bold" HeaderCellTextSize="16" Format="dd/MM/yyyy hh:mm:ss"/>
+                    </sfGrid:SfDataGrid.Columns>
+                </sfGrid:SfDataGrid>
+            </Grid>
+        </StackLayout>
+
+        <sfPopup:SfPopupLayout x:Name="popupLayout" IsOpen="{Binding IsOpenPopupThung}">
+            <sfPopup:SfPopupLayout.PopupView >
+                <sfPopup:PopupView HeaderTitle="Danh sách thiết bị trong lô" WidthRequest="500" HeightRequest="500" AppearanceMode="OneButton" >
+                    <sfPopup:PopupView.FooterTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <button:SfButton Text="OK" FontSize="20" FontAttributes="Bold" Command="{Binding AcceptCommand}" Grid.Column="0" HeightRequest="50"                      
+                                           VerticalOptions="CenterAndExpand" 
+                                           HorizontalOptions="FillAndExpand" BackgroundColor="#4EAF50">
+                                </button:SfButton>
+                            </Grid>
+                        </DataTemplate>
+                    </sfPopup:PopupView.FooterTemplate>
+                    <sfPopup:PopupView.ContentTemplate>
+                        <DataTemplate>
+                            <Grid x:Name="mGridLayout" AbsoluteLayout.LayoutFlags="All" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" 
+                         AbsoluteLayout.LayoutBounds="1,1,1,1" >
+                                <sfGrid:SfDataGrid x:Name="gridThung"
+                                   ItemsSource="{Binding DSThung,Mode=TwoWay}"
+                                   Style="{StaticResource styleDataGrid}"
+                                   GridStyle="{StaticResource styleGrid}">
+                                    <sfGrid:SfDataGrid.Columns >
+                                        <sfGrid:GridTextColumn MappingName="MaCode" HeaderText="Serial" HeaderFontAttribute="Bold"   HeaderCellTextSize="16"  MinimumWidth="120"/>
+                                        <sfGrid:GridTextColumn MappingName="vttB_Status" HeaderText="T.Thái" HeaderFontAttribute="Bold"   HeaderCellTextSize="16" ColumnSizer="Star">
+                                        </sfGrid:GridTextColumn>
+                                    </sfGrid:SfDataGrid.Columns>
+                                </sfGrid:SfDataGrid>
+                            </Grid>
+                        </DataTemplate>
+                    </sfPopup:PopupView.ContentTemplate>
+                </sfPopup:PopupView>
+            </sfPopup:SfPopupLayout.PopupView>
+        </sfPopup:SfPopupLayout>
+    </StackLayout>
+</ContentPage>

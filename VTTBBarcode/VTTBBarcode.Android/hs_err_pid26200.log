@@ -1,0 +1,121 @@
+#
+# There is insufficient memory for the Java Runtime Environment to continue.
+# Native memory allocation (mmap) failed to map 700416 bytes for card table expansion
+# Possible reasons:
+#   The system is out of physical RAM or swap space
+#   The process is running with CompressedOops enabled, and the Java Heap may be blocking the growth of the native heap
+# Possible solutions:
+#   Reduce memory load on the system
+#   Increase physical memory or swap space
+#   Check if swap backing store is full
+#   Decrease Java heap size (-Xmx/-Xms)
+#   Decrease number of Java threads
+#   Decrease Java thread stack sizes (-Xss)
+#   Set larger code cache with -XX:ReservedCodeCacheSize=
+# This output file may be truncated or incomplete.
+#
+#  Out of Memory Error (os_windows.cpp:3440), pid=26200, tid=0x0000000000001fa8
+#
+# JRE version:  (8.0_302-b08) (build )
+# Java VM: OpenJDK 64-Bit Server VM (25.302-b08 mixed mode windows-amd64 compressed oops)
+# Failed to write core dump. Minidumps are not enabled by default on client versions of Windows
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x00000276710b9000):  JavaThread "Unknown thread" [_thread_in_vm, id=8104, stack(0x000000906f500000,0x000000906f600000)]
+
+Stack: [0x000000906f500000,0x000000906f600000]
+[error occurred during error reporting (printing stack bounds), id 0xc0000005]
+
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+
+Other Threads:
+
+=>0x00000276710b9000 (exited) JavaThread "Unknown thread" [_thread_in_vm, id=8104, stack(0x000000906f500000,0x000000906f600000)]
+
+VM state:not at safepoint (not fully initialized)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+heap address: 0x00000000c0000000, size: 1024 MB, Compressed Oops mode: Non-zero based:0x00000000bffff000
+Narrow klass base: 0x0000000000000000, Narrow klass shift: 0
+
+GC Heap History (0 events):
+No events
+
+Deoptimization events (0 events):
+No events
+
+Classes redefined (0 events):
+No events
+
+Internal exceptions (0 events):
+No events
+
+Events (0 events):
+No events
+
+
+Dynamic libraries:
+0x00007ff7cf780000 - 0x00007ff7cf7ba000 	C:\Program Files\Eclipse Foundation\jdk-8.0.302.8-hotspot\bin\java.exe
+0x00007ffcd5230000 - 0x00007ffcd5428000 	C:\WINDOWS\SYSTEM32\ntdll.dll
+0x00007ffcd4e50000 - 0x00007ffcd4f0f000 	C:\WINDOWS\System32\KERNEL32.DLL
+0x00007ffcd2d80000 - 0x00007ffcd3052000 	C:\WINDOWS\System32\KERNELBASE.dll
+0x00007ffcd3270000 - 0x00007ffcd331e000 	C:\WINDOWS\System32\ADVAPI32.dll
+0x00007ffcd36b0000 - 0x00007ffcd374e000 	C:\WINDOWS\System32\msvcrt.dll
+0x00007ffcd39f0000 - 0x00007ffcd3a8c000 	C:\WINDOWS\System32\sechost.dll
+0x00007ffcd4f10000 - 0x00007ffcd5035000 	C:\WINDOWS\System32\RPCRT4.dll
+0x00007ffcd5040000 - 0x00007ffcd51e1000 	C:\WINDOWS\System32\USER32.dll
+0x00007ffcd2b50000 - 0x00007ffcd2b72000 	C:\WINDOWS\System32\win32u.dll
+0x00007ffcd3680000 - 0x00007ffcd36ab000 	C:\WINDOWS\System32\GDI32.dll
+0x00007ffcd3160000 - 0x00007ffcd326f000 	C:\WINDOWS\System32\gdi32full.dll
+0x00007ffcd2920000 - 0x00007ffcd29bd000 	C:\WINDOWS\System32\msvcp_win.dll
+0x00007ffcd2a50000 - 0x00007ffcd2b50000 	C:\WINDOWS\System32\ucrtbase.dll
+0x00007ffcb4c50000 - 0x00007ffcb4eea000 	C:\WINDOWS\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.19041.1110_none_60b5254171f9507e\COMCTL32.dll
+0x00007ffcd49f0000 - 0x00007ffcd4a22000 	C:\WINDOWS\System32\IMM32.DLL
+0x00007ffc8f8e0000 - 0x00007ffc8f9cf000 	C:\Program Files\Eclipse Foundation\jdk-8.0.302.8-hotspot\jre\bin\msvcr120.dll
+0x00007ffc97d00000 - 0x00007ffc97da6000 	C:\Program Files\Eclipse Foundation\jdk-8.0.302.8-hotspot\jre\bin\msvcp120.dll
+0x0000000058a00000 - 0x000000005926b000 	C:\Program Files\Eclipse Foundation\jdk-8.0.302.8-hotspot\jre\bin\server\jvm.dll
+0x00007ffcd4c90000 - 0x00007ffcd4c98000 	C:\WINDOWS\System32\PSAPI.DLL
+0x00007ffcbff70000 - 0x00007ffcbff79000 	C:\WINDOWS\SYSTEM32\WSOCK32.dll
+0x00007ffcccdb0000 - 0x00007ffcccdba000 	C:\WINDOWS\SYSTEM32\VERSION.dll
+0x00007ffcb4b30000 - 0x00007ffcb4b57000 	C:\WINDOWS\SYSTEM32\WINMM.dll
+0x00007ffcd4b00000 - 0x00007ffcd4b6b000 	C:\WINDOWS\System32\WS2_32.dll
+0x00007ffcaa6a0000 - 0x00007ffcaa6af000 	C:\Program Files\Eclipse Foundation\jdk-8.0.302.8-hotspot\jre\bin\verify.dll
+0x00007ffc9d510000 - 0x00007ffc9d539000 	C:\Program Files\Eclipse Foundation\jdk-8.0.302.8-hotspot\jre\bin\java.dll
+0x00007ffcaa2e0000 - 0x00007ffcaa2f6000 	C:\Program Files\Eclipse Foundation\jdk-8.0.302.8-hotspot\jre\bin\zip.dll
+
+VM Arguments:
+jvm_args: -Xmx1G 
+java_command: C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Xamarin\Android\bundletool.jar build-bundle --modules obj\Debug\110\android\bin\base.zip --output obj\Debug\110\android\bin\cpc.vttbbarcode.aab --config C:\Users\Administrator\AppData\Local\Temp\tmp983D.tmp
+java_class_path (initial): C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Xamarin\Android\bundletool.jar
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+PATH=C:\Program Files\Eclipse Foundation\jdk-8.0.302.8-hotspot\bin;C:\Program Files\Microsoft\jdk-11.0.12.7-hotspot\bin;C:\Program Files\Microsoft MPI\Bin\;C:\Oracle\11.2.0\client_1;C:\Program Files (x86)\Eziriz\.NET Reactor;C:\ProgramData\Oracle\Java\javapath;D:\app\Hung\product\11.2.0\client_2\bin;D:\app\Hung\product\11.2.0\client_1;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files (x86)\Microsoft SQL Server\140\Tools\Binn\;C:\Program Files\Microsoft SQL Server\140\Tools\Binn\;C:\Program Files (x86)\Microsoft SQL Server\140\DTS\Binn\;C:\Program Files\Microsoft SQL Server\140\DTS\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\130\Tools\Binn\;C:\Program Files\Git\cmd;C:\Program Files\dotnet\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files (x86)\Microsoft SQL Server\Client SDK\ODBC\130\Tools\Binn\;C:\Program Files (x86)\Microsoft SQL Server\140\Tools\Binn\ManagementStudio\;C:\Program Files (x86)\Microsoft SQL Server\90\Tools\binn\;C:\Program Files\Eclipse Foundation\jdk1.7.0_80;C:\Users\Administrator\AppData\Local\Microsoft\WindowsApps;C:\Users\Administrator\.dotnet\tools;C:\Users\Administrator\AppData\Local\GitHubDesktop\bin;C:\Users\Administrator\.dotnet\tools
+USERNAME=Administrator
+OS=Windows_NT
+PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 94 Stepping 3, GenuineIntel
+
+
+
+---------------  S Y S T E M  ---------------
+
+OS: Windows 10.0 , 64 bit Build 19041 (10.0.19041.2546)
+
+CPU:total 8 (initial active 8) (4 cores per cpu, 2 threads per core) family 6 model 94 stepping 3, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, avx, avx2, aes, clmul, erms, rtm, 3dnowpref, lzcnt, ht, tsc, tscinvbit, bmi1, bmi2, adx
+
+Memory: 4k page, physical 33431352k(2872884k free), swap 33431352k(5724k free)
+
+vm_info: OpenJDK 64-Bit Server VM (25.302-b08) for windows-amd64 JRE (1.8.0_302-b08), built on Jul 20 2021 21:31:03 by "jenkins" with MS VC++ 12.0 (VS2013)
+
+time: Mon Mar 13 16:41:29 2023
+timezone: SE Asia Standard Time
+elapsed time: 0.007932 seconds (0d 0h 0m 0s)
+

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Shell xmlns="http://xamarin.com/schemas/2014/forms" 
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:local="clr-namespace:VTTBBarcode.Views"
+       Title="EVNCPC-ERP SCANNER"
+       x:Class="VTTBBarcode.AppShell">
+
+    <!--
+        The overall app visual hierarchy is defined here, along with navigation.
+    
+        https://docs.microsoft.com/xamarin/xamarin-forms/app-fundamentals/shell/
+    -->
+
+    <Shell.Resources>
+        <ResourceDictionary>
+            <Style x:Key="BaseStyle" TargetType="Element">
+                <Setter Property="Shell.BackgroundColor" Value="{StaticResource Primary}" />
+                <Setter Property="Shell.ForegroundColor" Value="White" />
+                <Setter Property="Shell.TitleColor" Value="White" />
+                <Setter Property="Shell.DisabledColor" Value="#B4FFFFFF" />
+                <Setter Property="Shell.UnselectedColor" Value="#95FFFFFF" />
+                <Setter Property="Shell.TabBarBackgroundColor" Value="{StaticResource Primary}" />
+                <Setter Property="Shell.TabBarForegroundColor" Value="White"/>
+                <Setter Property="Shell.TabBarUnselectedColor" Value="#95FFFFFF"/>
+                <Setter Property="Shell.TabBarTitleColor" Value="White"/>
+            </Style>
+            <Style TargetType="TabBar" BasedOn="{StaticResource BaseStyle}" />
+            <Style TargetType="FlyoutItem" BasedOn="{StaticResource BaseStyle}" />
+
+            <!--
+            Default Styles for all Flyout Items
+            https://docs.microsoft.com/xamarin/xamarin-forms/app-fundamentals/shell/flyout#flyoutitem-and-menuitem-style-classes
+            -->
+            <Style Class="FlyoutItemLabelStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="White"></Setter>
+            </Style>
+            <Style Class="FlyoutItemLayoutStyle" TargetType="Layout" ApplyToDerivedTypes="True">
+                <Setter Property="VisualStateManager.VisualStateGroups">
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="Normal">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="{x:OnPlatform UWP=Transparent, iOS=White}" />
+                                    <Setter TargetName="FlyoutItemLabel" Property="Label.TextColor" Value="{StaticResource Primary}" />
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Selected">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </Setter>
+            </Style>
+
+            <!--
+            Custom Style you can apply to any Flyout Item
+            -->
+            <Style Class="MenuItemLayoutStyle" TargetType="Layout" ApplyToDerivedTypes="True">
+                <Setter Property="VisualStateManager.VisualStateGroups">
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="Normal">
+                                <VisualState.Setters>
+                                    <Setter TargetName="FlyoutItemLabel" Property="Label.TextColor" Value="{StaticResource Primary}" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </Shell.Resources>
+
+    <!-- 
+        When the Flyout is visible this defines the content to display in the flyout.
+        FlyoutDisplayOptions="AsMultipleItems" will create a separate flyout item for each child element    
+        https://docs.microsoft.com/dotnet/api/xamarin.forms.shellgroupitem.flyoutdisplayoptions?view=xamarin-forms
+    -->
+
+    <Shell.FlyoutHeaderTemplate>
+        <DataTemplate>
+            <Grid BackgroundColor="Transparent"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="FillAndExpand"
+                  HeightRequest="120">
+                <Image Aspect="AspectFit"
+                       Source="logohome.png"
+                       Opacity="1" />
+            </Grid>
+        </DataTemplate>
+    </Shell.FlyoutHeaderTemplate>
+
+    <!--<FlyoutItem Title="EVNCPC-ERP SCANNER" 
+                Shell.TabBarIsVisible="False"
+                FlyoutDisplayOptions="AsMultipleItems"
+                FlyoutIcon="ic_back.png"
+                
+                >
+        <ShellContent Title="Trang Chủ" IsTabStop="True" Icon="home.png" ContentTemplate="{DataTemplate local:Home }">
+        </ShellContent>
+        <ShellContent Title="Nhập kho theo hợp đồng"  IsTabStop="True" Icon="inputhd.png" ContentTemplate="{DataTemplate local:NhapKhoHDPage }">
+        </ShellContent>
+        <ShellContent Title="Nhập kho"  IsTabStop="True" Icon="input.png" ContentTemplate="{DataTemplate local:NhapKhoPage }">
+        </ShellContent>
+        <ShellContent Title="Chuyển kho"  IsTabStop="True" Icon="transfer.png" ContentTemplate="{DataTemplate local:ChuyenKhoPage }">
+        </ShellContent>
+        <ShellContent Title="Xuất kho"  IsTabStop="True" Icon="output.png" ContentTemplate="{DataTemplate local:XuatKhoPage }">
+        </ShellContent>
+        <ShellContent Title="Kiểm kê"  IsTabStop="True" Icon="statistic.png" ContentTemplate="{DataTemplate local:KiemKePage }">
+        </ShellContent>
+        <ShellContent Title="Kiểm tra thông tin công tơ"  IsTabStop="True" Icon="history.png" ContentTemplate="{DataTemplate local:ThongTinPage }">
+        </ShellContent>
+
+
+    </FlyoutItem>-->
+    <!--fix lỗi hơn 5 items cho iOS-->
+    <FlyoutItem FlyoutDisplayOptions="AsMultipleItems" >
+        <ShellContent Title="Trang Chủ" IsTabStop="True" Icon="home.png" Route="Home" ContentTemplate="{DataTemplate local:Home}"  />
+    </FlyoutItem>
+    <FlyoutItem FlyoutDisplayOptions="AsMultipleItems" >
+        <ShellContent Title="Nhập kho theo hợp đồng" IsTabStop="True" Icon="inputhd.png" ContentTemplate="{DataTemplate local:NhapKhoHDPage}" />
+    </FlyoutItem>
+    <FlyoutItem FlyoutDisplayOptions="AsMultipleItems" >
+        <ShellContent Title="Nhập kho"  IsTabStop="True" Icon="input.png" ContentTemplate="{DataTemplate local:NhapKhoPage}"  />
+    </FlyoutItem>
+    <FlyoutItem FlyoutDisplayOptions="AsMultipleItems" >
+        <ShellContent Title="Chuyển kho"  IsTabStop="True" Icon="transfer.png" ContentTemplate="{DataTemplate local:ChuyenKhoPage }">
+        </ShellContent>
+    </FlyoutItem>
+    <FlyoutItem FlyoutDisplayOptions="AsMultipleItems" >
+        <ShellContent Title="Xuất kho"  IsTabStop="True" Icon="output.png" ContentTemplate="{DataTemplate local:XuatKhoPage }">
+        </ShellContent>
+    </FlyoutItem>
+    <FlyoutItem FlyoutDisplayOptions="AsMultipleItems" >
+        <ShellContent Title="Kiểm kê"  IsTabStop="True" Icon="statistic.png" ContentTemplate="{DataTemplate local:KiemKePage }">
+        </ShellContent>
+    </FlyoutItem>
+    <FlyoutItem FlyoutDisplayOptions="AsMultipleItems" >
+        <ShellContent Title="Kiểm tra thông tin công tơ"  IsTabStop="True" Icon="history.png" ContentTemplate="{DataTemplate local:ThongTinPage }">
+        </ShellContent>
+    </FlyoutItem>
+    <MenuItem Text="Thoát" Clicked="MenuItem_Clicked" IconImageSource="offline.png">
+
+    </MenuItem>
+
+</Shell>

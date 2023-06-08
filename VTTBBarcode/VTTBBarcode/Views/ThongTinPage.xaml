@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="VTTBBarcode.Views.ThongTinPage"
+             xmlns:vm="clr-namespace:VTTBBarcode.ViewModels" 
+             xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms" 
+             xmlns:combobox="clr-namespace:Syncfusion.XForms.ComboBox;assembly=Syncfusion.SfComboBox.XForms"
+             xmlns:ListCollection="clr-namespace:System.Collections.Generic;assembly=netstandard" 
+             xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms" 
+             xmlns:sfGrid="clr-namespace:Syncfusion.SfDataGrid.XForms;assembly=Syncfusion.SfDataGrid.XForms" 
+             xmlns:sfPopup="clr-namespace:Syncfusion.XForms.PopupLayout;assembly=Syncfusion.SfPopupLayout.XForms"
+             xmlns:local="clr-namespace:VTTBBarcode.Helpers"
+             Title="{Binding Title}">
+    
+    <ContentPage.BindingContext>
+        <vm:ThongTinViewModel />
+    </ContentPage.BindingContext>
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Color x:Key="Accent">#96d1ff</Color>
+            <local:GridStyle x:Key="styleGrid"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Spacing="0" Margin="5,10,5,0"> 
+        <StackLayout  Orientation="Horizontal" >
+            <inputLayout:SfTextInputLayout
+                        Hint="Mã QR/Barcode"
+                        ContainerType="Outlined">
+                <Entry Text="{Binding MaCode}" IsEnabled="False" HeightRequest="{OnPlatform Android='50', iOS='30'}" WidthRequest="500" />
+            </inputLayout:SfTextInputLayout>
+            <button:SfButton HeightRequest="50" WidthRequest="150" Margin="0,0,0,7" BackgroundColor="#4EAF50" CornerRadius="7" HorizontalOptions="Center" VerticalOptions="Center"  Command="{Binding ScanCommand}">
+                <button:SfButton.Content>
+                    <StackLayout Orientation="Horizontal" >
+                        <Image Source="qrcode.png" IsAnimationPlaying="True" WidthRequest="80"/>
+                        <Label Text="QUÉT" FontSize="22" VerticalTextAlignment="Center" TextColor="White" Margin="-7,0,0,0" FontAttributes="Bold" />
+                    </StackLayout>
+                </button:SfButton.Content>
+            </button:SfButton>
+        </StackLayout>
+        <inputLayout:SfTextInputLayout Hint="Trạng thái công tơ" ContainerType="Outlined" Margin="0,-7,0,0" >
+            <Entry Text="{Binding TThaiCTo}" IsEnabled="False" HeightRequest="{OnPlatform Android='50', iOS='30'}" />
+        </inputLayout:SfTextInputLayout>
+        <inputLayout:SfTextInputLayout Hint="Trạng thái kiểm định" ContainerType="Outlined" Margin="0,-7,0,0" >
+            <Entry Text="{Binding TThaiKDinh}" IsEnabled="False" HeightRequest="{OnPlatform Android='50', iOS='30'}" />
+        </inputLayout:SfTextInputLayout>
+        <!--<inputLayout:SfTextInputLayout Hint="Ngày biến động gần nhất" ContainerType="Outlined" Margin="0,-7,0,0" >
+            <Entry Text="{Binding NgayBDong}" IsEnabled="False" HeightRequest="50" />
+        </inputLayout:SfTextInputLayout>-->
+        <StackLayout Orientation="Horizontal" HeightRequest="30" BackgroundColor="Transparent" HorizontalOptions="FillAndExpand">
+            <Label Text="Lịch sử biến động" TextColor="#4EAF50" FontSize="20" FontAttributes="Bold" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" />
+        </StackLayout>
+        <StackLayout VerticalOptions="FillAndExpand">
+            <Grid x:Name="mGridLayout" AbsoluteLayout.LayoutFlags="All" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" 
+                         AbsoluteLayout.LayoutBounds="1,1,1,1" >
+                <sfGrid:SfDataGrid x:Name="gridMaCode" 
+                                   ItemsSource="{Binding LichSuBD,Mode=TwoWay}"
+                                   Style="{StaticResource styleDataGrid}"    
+                                   GridStyle="{StaticResource styleGrid}">
+                    <sfGrid:SfDataGrid.Columns >
+                        <sfGrid:GridDateTimeColumn MappingName="ngaY_BDONG" HeaderText="Ngày BĐ" HeaderFontAttribute="Bold" HeaderCellTextSize="16" MinimumWidth="120" Format="dd/MM/yyyy hh:mm:ss"/>
+                        <sfGrid:GridTextColumn MappingName="mA_BDONG" HeaderText="Mã BĐ" HeaderFontAttribute="Bold" HeaderCellTextSize="16" MinimumWidth="30"/>
+                        <sfGrid:GridTextColumn MappingName="noI_DUNG" HeaderText="Nội dung" HeaderFontAttribute="Bold" HeaderCellTextSize="16" />
+                    </sfGrid:SfDataGrid.Columns>
+                </sfGrid:SfDataGrid>
+            </Grid>
+        </StackLayout>
+    </StackLayout>
+</ContentPage>

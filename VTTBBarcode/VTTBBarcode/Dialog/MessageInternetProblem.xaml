@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<pages:PopupPage xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup" 
+             xmlns:sfbutton="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms" 
+             xmlns:animations="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup"
+             xmlns:local="clr-namespace:VTTBBarcode.Helpers"
+             x:Class="VTTBBarcode.Dialog.MessageInternetProblem">
+    <pages:PopupPage.Animation >
+        <animations:ScaleAnimation 
+            PositionIn="Center"
+            PositionOut="Center"
+            ScaleIn="1.2"
+            ScaleOut="0.8"
+            DurationIn="400"
+            DurationOut="300"
+            EasingIn="SinOut"
+            EasingOut="SinIn"
+            HasBackgroundAnimation="True"/>
+    </pages:PopupPage.Animation>
+    <Frame CornerRadius="15"
+           Margin="20,0,20,0"             
+           HorizontalOptions="FillAndExpand"
+           VerticalOptions="Center">
+        <StackLayout HorizontalOptions="FillAndExpand" Spacing="20">
+
+            <Image HorizontalOptions="CenterAndExpand">
+                <Image.Source>
+                    <FontImageSource FontFamily="UserIcons" Glyph="{Binding Source={x:Static local:FontIconClass.StopCircle}}" Size="50" Color="Red" />
+                </Image.Source>
+            </Image>
+            <Label      TextColor="Black" FontSize="16"  Text="Quý khách vui lòng kiểm tra kết nối Internet/3G/Wifi" 
+                        HorizontalOptions="FillAndExpand"
+                        VerticalOptions="CenterAndExpand" HorizontalTextAlignment="Center"/>
+
+            <sfbutton:SfButton  Grid.Column="0" 
+                                        x:Name="btnOK" 
+                                        Text="Đóng" FontSize="20" 
+                                        Clicked="btnOK_Clicked" 
+                                        HorizontalOptions="FillAndExpand" 
+                                        Style="{StaticResource sfbutton}"
+                                        HeightRequest="50">
+            </sfbutton:SfButton>
+        </StackLayout>
+
+    </Frame>
+</pages:PopupPage>

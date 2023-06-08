@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="VTTBBarcode.Views.KiemKePage"
+             xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms" 
+             xmlns:combobox="clr-namespace:Syncfusion.XForms.ComboBox;assembly=Syncfusion.SfComboBox.XForms"
+             xmlns:ListCollection="clr-namespace:System.Collections.Generic;assembly=netstandard" 
+             xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms" 
+             xmlns:sfGrid="clr-namespace:Syncfusion.SfDataGrid.XForms;assembly=Syncfusion.SfDataGrid.XForms" 
+             xmlns:sfPopup="clr-namespace:Syncfusion.XForms.PopupLayout;assembly=Syncfusion.SfPopupLayout.XForms"
+             xmlns:local="clr-namespace:VTTBBarcode.Helpers"
+             Title="{Binding Title}">
+    
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Color x:Key="Accent">#96d1ff</Color>
+            <local:GridStyle x:Key="styleGrid"/>
+            <local:GridStyleInvisible x:Key="styleGridInvisible"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Spacing="0" Margin="5,10,5,0">
+        <inputLayout:SfTextInputLayout ContainerType="Outlined" Hint="Chọn kho kiểm kê" HeightRequest="{OnPlatform Android='55', iOS='60'}"  InputViewPadding="15,0,0,0">
+            <combobox:SfComboBox DataSource="{Binding ListKho}" DisplayMemberPath="TENKHO" HeightRequest="45" SelectionChanged="SfComboBox_SelectionChanged" SelectedItem="{Binding SelectedKho,Mode=TwoWay}">
+            </combobox:SfComboBox>
+        </inputLayout:SfTextInputLayout>
+        <inputLayout:SfTextInputLayout ContainerType="Outlined" Hint="Chọn kho phụ kiểm kê" HeightRequest="{OnPlatform Android='55', iOS='60'}"  InputViewPadding="15,0,0,0">
+            <combobox:SfComboBox DataSource="{Binding ListKhoPhu}" DisplayMemberPath="DESCRIPTION" HeightRequest="45" SelectionChanged="SfComboBox_SelectionChanged_1"  SelectedItem="{Binding SelectedKhoPhu,Mode=TwoWay}">
+            </combobox:SfComboBox>
+        </inputLayout:SfTextInputLayout>
+        <inputLayout:SfTextInputLayout ContainerType="Outlined" Hint="Mã VTTB kiểm kê" HeightRequest="{OnPlatform Android='55', iOS='60'}" InputViewPadding="15,0,0,0">
+            <combobox:SfComboBox HeightRequest="45" SelectedItem="{Binding SelectedVTTB,Mode=TwoWay}">
+                <combobox:SfComboBox.ComboBoxSource>
+                    <ListCollection:List x:TypeArguments="x:String">
+                        <x:String>3.60.05.130</x:String>
+                    </ListCollection:List>
+                </combobox:SfComboBox.ComboBoxSource>
+            </combobox:SfComboBox>
+        </inputLayout:SfTextInputLayout>
+        <StackLayout  Orientation="Horizontal" >
+            <inputLayout:SfTextInputLayout
+                        Hint="Mã QR/Barcode"
+                        ContainerType="Outlined"  InputViewPadding="15,0,0,0">
+                <Entry Text="{Binding MaCode}" IsEnabled="False" HeightRequest="45" WidthRequest="500" />
+            </inputLayout:SfTextInputLayout>
+            <button:SfButton HeightRequest="45" WidthRequest="150" Margin="0,0,0,8" BackgroundColor="#4EAF50" CornerRadius="7" HorizontalOptions="Center" VerticalOptions="Center"  Command="{Binding ScanCommand}">
+                <button:SfButton.Content>
+                    <StackLayout Orientation="Horizontal" >
+                        <Image Source="qrcode.png" IsAnimationPlaying="True" WidthRequest="80"/>
+                        <Label Text="QUÉT" FontSize="22" VerticalTextAlignment="Center" TextColor="White" Margin="-7,0,0,0" FontAttributes="Bold" />
+                    </StackLayout>
+                </button:SfButton.Content>
+            </button:SfButton>
+        </StackLayout>
+        
+        <StackLayout Orientation="Horizontal" HeightRequest="30" BackgroundColor="Transparent" HorizontalOptions="FillAndExpand">
+            <Label Text="Danh sách đã lưu" TextColor="#4EAF50" FontSize="20" FontAttributes="Bold" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" />
+        </StackLayout>
+
+        <StackLayout VerticalOptions="FillAndExpand">
+            <Grid x:Name="mGridLayout" AbsoluteLayout.LayoutFlags="All" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" 
+                         AbsoluteLayout.LayoutBounds="1,1,1,1" >
+                <sfGrid:SfDataGrid x:Name="gridMaCode"
+                                   ItemsSource="{Binding KKTable,Mode=TwoWay}"
+                                   Style="{StaticResource styleDataGrid}"    
+                                   GridStyle="{StaticResource styleGrid}" >
+                    <sfGrid:SfDataGrid.Columns >
+                        <sfGrid:GridTextColumn MappingName="STT" HeaderFontAttribute="Bold"   HeaderCellTextSize="16" Width="45"/>
+                        <sfGrid:GridTextColumn MappingName="MaCode" HeaderText="Số chế tạo" HeaderFontAttribute="Bold" HeaderCellTextSize="16" Width="80"/>
+                        <sfGrid:GridTextColumn MappingName="MaKho" HeaderText="Mã kho" HeaderFontAttribute="Bold" HeaderCellTextSize="16" Width="50"/>
+                        <sfGrid:GridTextColumn MappingName="MaKhoPhu" HeaderText="Mã k.phụ" HeaderFontAttribute="Bold" HeaderCellTextSize="16" Width="50"/>
+                        <sfGrid:GridTextColumn MappingName="MaVTTB" HeaderText="Mã VTTB" HeaderFontAttribute="Bold" HeaderCellTextSize="16" Width="150"/>
+                        <sfGrid:GridTextColumn MappingName="DVT" HeaderText="ĐVT" HeaderFontAttribute="Bold" HeaderCellTextSize="16" Width="50"/>
+                        <sfGrid:GridTextColumn MappingName="SL" HeaderText="SL" HeaderFontAttribute="Bold" HeaderCellTextSize="16" Width="40"/>
+                        <sfGrid:GridTextColumn MappingName="KetQua" HeaderText="Kết quả kiểm kê" HeaderFontAttribute="Bold" HeaderCellTextSize="16" Width="150"/>
+                        <sfGrid:GridTextColumn MappingName="NgayKK" HeaderText="Ngày kiểm kê" HeaderFontAttribute="Bold" HeaderCellTextSize="16" Width="80" Format="dd/MM/yyyy hh:mm:ss"/>
+                        <sfGrid:GridTextColumn MappingName="CheckedResult" HeaderText="Kết quả kiểm định" HeaderFontAttribute="Bold" HeaderCellTextSize="16" Width="80"/>
+                        <sfGrid:GridTextColumn MappingName="CheckedEXDate" HeaderText="Hạn kiểm định" HeaderFontAttribute="Bold" HeaderCellTextSize="16" Width="80"  Format="dd/MM/yyyy"/>
+                        <sfGrid:GridTextColumn MappingName="vttB_Status" HeaderText="Trạng thái" HeaderFontAttribute="Bold" HeaderCellTextSize="16" Width="150"/>
+                    </sfGrid:SfDataGrid.Columns>
+                </sfGrid:SfDataGrid>
+            </Grid>
+        </StackLayout>
+
+        <StackLayout VerticalOptions="FillAndExpand" HeightRequest="0">
+            <Grid x:Name="mGridLayoutERP" AbsoluteLayout.LayoutFlags="All" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" 
+                         AbsoluteLayout.LayoutBounds="1,1,1,1">
+                <sfGrid:SfDataGrid x:Name="gridMaCodeERP"
+                                   ItemsSource="{Binding KKTableERP,Mode=TwoWay}"
+                                   GridStyle="{StaticResource styleGridInvisible}">
+                    <sfGrid:SfDataGrid.Columns >
+                        <sfGrid:GridTextColumn MappingName="Column1" HeaderText="TT"/>
+                        <sfGrid:GridTextColumn MappingName="Column2" HeaderText="Ngày KK" Format="dd/MM/yyyy hh:mm:ss" />
+                        <sfGrid:GridTextColumn MappingName="Column3" HeaderText="Mã kho KK"/>
+                        <sfGrid:GridTextColumn MappingName="Column4" HeaderText="Mã kho phụ KK"/>
+                        <sfGrid:GridTextColumn MappingName="Column5" HeaderText="Mã VTTB KK"/>
+                        <sfGrid:GridTextColumn MappingName="Column6" HeaderText="ĐVT"/>
+                        <sfGrid:GridTextColumn MappingName="Column7" HeaderText="Số chế tạo"/>
+                        <sfGrid:GridTextColumn MappingName="Column8" HeaderText="SL sổ sách tại thời điểm KK"/>
+                        <sfGrid:GridTextColumn MappingName="Column9" HeaderText="Kết quả kiểm kê thực tế"/>
+                        <sfGrid:GridTextColumn MappingName="Column10" HeaderText="Kết quả kiểm định"/>
+                        <sfGrid:GridTextColumn MappingName="Column11" HeaderText="Hạn cuối kiểm định" Format="dd/MM/yyyy" />
+                        <sfGrid:GridTextColumn MappingName="Column12" HeaderText="Trạng thái trên cơ sở dữ liệu"/>
+                    </sfGrid:SfDataGrid.Columns>
+                </sfGrid:SfDataGrid>
+            </Grid>
+
+        </StackLayout>
+        
+        <Grid Padding="0,10,0,5" VerticalOptions="End" MinimumHeightRequest="50">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <button:SfButton Text="LƯU DL" FontSize="27" FontAttributes="Bold" Command="{Binding SaveCommand}" Grid.Column="0" HeightRequest="50"                        
+                                           VerticalOptions="CenterAndExpand" 
+                                           HorizontalOptions="FillAndExpand" BackgroundColor="#4EAF50">
+            </button:SfButton>
+            <button:SfButton Text="EXCEL" FontSize="27" FontAttributes="Bold" Command="{Binding ExportCommand}" Grid.Column="1" HeightRequest="50"                        
+                                           VerticalOptions="CenterAndExpand" 
+                                           HorizontalOptions="FillAndExpand" BackgroundColor="#4EAF50">
+            </button:SfButton>
+            <button:SfButton Text="XÓA DL" FontSize="27" FontAttributes="Bold" Command="{Binding DataCommand}" Grid.Column="2" HeightRequest="50"                        
+                                           VerticalOptions="CenterAndExpand" 
+                                           HorizontalOptions="FillAndExpand" BackgroundColor="#4EAF50">
+            </button:SfButton>
+        </Grid>        
+    </StackLayout>
+</ContentPage>

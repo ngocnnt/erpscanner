@@ -1,0 +1,263 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="VTTBBarcode.Views.XuatKhoPage"
+             xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms" 
+             xmlns:combobox="clr-namespace:Syncfusion.XForms.ComboBox;assembly=Syncfusion.SfComboBox.XForms"
+             xmlns:ListCollection="clr-namespace:System.Collections.Generic;assembly=netstandard" 
+             xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms" 
+             xmlns:sfGrid="clr-namespace:Syncfusion.SfDataGrid.XForms;assembly=Syncfusion.SfDataGrid.XForms" 
+             xmlns:sfPopup="clr-namespace:Syncfusion.XForms.PopupLayout;assembly=Syncfusion.SfPopupLayout.XForms"
+             xmlns:local="clr-namespace:VTTBBarcode.Helpers"
+             xmlns:zxing="clr-namespace:ZXing.Net.Mobile.Forms;assembly=ZXing.Net.Mobile.Forms"
+             Title="{Binding Title}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Color x:Key="Accent">#96d1ff</Color>
+            <local:GridStyle x:Key="styleGrid"/>
+            <local:GridStyleInvisible x:Key="styleGridInvisible"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Name="MenuItem" Order="Secondary" Text="Lịch sử" Priority="1" Command="{Binding LichSuCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Spacing="0" Margin="5,10,5,0">
+        <inputLayout:SfTextInputLayout ContainerType="Outlined" Hint="Chọn đối tác nhận hàng" HeightRequest="{OnPlatform Android='55', iOS='60'}"  InputViewPadding="15,0,0,0">
+            <!--<combobox:SfComboBox DataSource="{Binding ListKHXuat}" DisplayMemberPath="TENKH" HeightRequest="45" SelectedItem="{Binding SelectedKH,Mode=TwoWay}">
+            </combobox:SfComboBox>-->
+            <combobox:SfComboBox HeightRequest="45" SelectedItem="{Binding SelectedKH,Mode=TwoWay}">
+                <combobox:SfComboBox.ComboBoxSource>
+                    <ListCollection:List x:TypeArguments="x:String">
+                        <x:String>EMEC</x:String>
+                        <x:String>ETC</x:String>
+                        <x:String>Chọn sau</x:String>
+                    </ListCollection:List>
+                </combobox:SfComboBox.ComboBoxSource>
+            </combobox:SfComboBox>
+        </inputLayout:SfTextInputLayout>
+        <inputLayout:SfTextInputLayout ContainerType="Outlined" Hint="Chọn hình thức xuất kho" HeightRequest="{OnPlatform Android='55', iOS='60'}"  InputViewPadding="15,0,0,0">
+            <combobox:SfComboBox HeightRequest="45" SelectedItem="{Binding SelectedHTXK,Mode=TwoWay}">
+                <combobox:SfComboBox.ComboBoxSource>
+                    <ListCollection:List x:TypeArguments="x:String">
+                        <x:String>Xuất phục vụ lắp mới</x:String>
+                        <x:String>Xuất phục vụ thay định kỳ</x:String>
+                        <x:String>Xuất phục vụ XLSC</x:String>
+                        <x:String>Xuất gia công, sửa chữa, thí nghiệm</x:String>
+                        <x:String>Xuất thanh lý, nhượng bán</x:String>
+                        <x:String>Xuất đi bảo hành</x:String>
+                    </ListCollection:List>
+                </combobox:SfComboBox.ComboBoxSource>
+            </combobox:SfComboBox>
+        </inputLayout:SfTextInputLayout>
+        <StackLayout  Orientation="Horizontal" >
+            <inputLayout:SfTextInputLayout
+                        Hint="Mã QR/Barcode"
+                        ContainerType="Outlined"  InputViewPadding="15,0,0,0">
+                <Entry Text="{Binding MaCode}" IsEnabled="False" HeightRequest="45" WidthRequest="500" />
+            </inputLayout:SfTextInputLayout>
+            <button:SfButton HeightRequest="45" WidthRequest="150" Margin="0,0,0,8" BackgroundColor="#4EAF50" CornerRadius="7" HorizontalOptions="Center" VerticalOptions="Center"  Command="{Binding ScanCommand}">
+                <button:SfButton.Content>
+                    <StackLayout Orientation="Horizontal" >
+                        <Image Source="qrcode.png" IsAnimationPlaying="True" WidthRequest="80"/>
+                        <Label Text="QUÉT" FontSize="22" VerticalTextAlignment="Center" TextColor="White" Margin="-7,0,0,0" FontAttributes="Bold" />
+                    </StackLayout>
+                </button:SfButton.Content>
+            </button:SfButton>
+        </StackLayout>
+        <inputLayout:SfTextInputLayout Hint="Mã kiểm soát VTTB" ContainerType="Outlined" Margin="{OnPlatform Android='0,-15,0,0', iOS='0,-7,0,0'}"  InputViewPadding="15,0,0,0">
+            <Entry Text="{Binding MaVTTB}" IsEnabled="False" HeightRequest="45" />
+        </inputLayout:SfTextInputLayout>
+        <inputLayout:SfTextInputLayout Hint="Kho đang tồn" ContainerType="Outlined" Margin="{OnPlatform Android='0,-15,0,-15', iOS='0,-7,0,-7'}"  InputViewPadding="15,0,0,0">
+            <Entry Text="{Binding KhoTon}" IsEnabled="False" HeightRequest="45" />
+        </inputLayout:SfTextInputLayout>
+        <StackLayout Orientation="Horizontal" HeightRequest="30" BackgroundColor="Transparent" HorizontalOptions="FillAndExpand">
+            <Label Text="Danh sách đã lưu" TextColor="#4EAF50" FontSize="20" FontAttributes="Bold" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" />
+        </StackLayout>
+
+        <StackLayout VerticalOptions="FillAndExpand">
+            <Grid x:Name="mGridLayout" AbsoluteLayout.LayoutFlags="All" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" 
+                         AbsoluteLayout.LayoutBounds="1,1,1,1" >
+                <sfGrid:SfDataGrid x:Name="gridMaCode"
+                                   ItemsSource="{Binding XKTable,Mode=TwoWay}"
+                                   Style="{StaticResource styleDataGrid}"    
+                                   GridStyle="{StaticResource styleGrid}" >
+                    <sfGrid:SfDataGrid.Columns >
+                        <sfGrid:GridTextColumn MappingName="STT" HeaderFontAttribute="Bold"   HeaderCellTextSize="16" Width="45"/>
+                        <sfGrid:GridTextColumn MappingName="MaCode" HeaderText="Mã code" HeaderFontAttribute="Bold" HeaderCellTextSize="16" Width="90"/>
+                        <sfGrid:GridTextColumn MappingName="vttB_Status" HeaderText="T.Thái" HeaderFontAttribute="Bold" HeaderCellTextSize="16" Width="180"/>
+                        <sfGrid:GridTextColumn MappingName="KhoTon" HeaderText="Kho tồn" HeaderFontAttribute="Bold" HeaderCellTextSize="16" Width="50"/>
+                        <sfGrid:GridTextColumn MappingName="HinhThucXK" HeaderText="Hình thức CK" HeaderFontAttribute="Bold" HeaderCellTextSize="16" Width="180"/>
+                        <sfGrid:GridTextColumn MappingName="DoiTac" HeaderText="Đối tác" HeaderFontAttribute="Bold" HeaderCellTextSize="16" Width="50"/>
+                        <sfGrid:GridTextColumn MappingName="NgayXL" HeaderText="Ngày XL" HeaderFontAttribute="Bold" HeaderCellTextSize="16" Width="140" Format="dd/MM/yyyy hh:mm:ss"/>
+                    </sfGrid:SfDataGrid.Columns>
+                </sfGrid:SfDataGrid>
+            </Grid>
+
+        </StackLayout>
+
+        <StackLayout VerticalOptions="FillAndExpand" HeightRequest="0">
+            <Grid x:Name="mGridLayoutERP" AbsoluteLayout.LayoutFlags="All" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" 
+                         AbsoluteLayout.LayoutBounds="1,1,1,1">
+                <sfGrid:SfDataGrid x:Name="gridMaCodeERP"
+                                   ItemsSource="{Binding XKTableERP,Mode=TwoWay}"
+                                   GridStyle="{StaticResource styleGridInvisible}">
+                    <sfGrid:SfDataGrid.Columns >
+                        <sfGrid:GridTextColumn MappingName="Column1" />
+                        <sfGrid:GridTextColumn MappingName="Column2" />
+                        <sfGrid:GridTextColumn MappingName="Column3" />
+                        <sfGrid:GridTextColumn MappingName="Column4" />
+                        <sfGrid:GridTextColumn MappingName="Column5" />
+                        <sfGrid:GridTextColumn MappingName="Column6" />
+                        <sfGrid:GridTextColumn MappingName="Column7" />
+                        <sfGrid:GridTextColumn MappingName="Column8" />
+                        <sfGrid:GridTextColumn MappingName="Column9" Format="dd/MM/yyyy hh:mm:ss" />
+                        <sfGrid:GridTextColumn MappingName="Column10" />
+                        <sfGrid:GridTextColumn MappingName="Column11" />
+                        <sfGrid:GridTextColumn MappingName="Column12" />
+                        <sfGrid:GridTextColumn MappingName="Column13" />
+                        <sfGrid:GridTextColumn MappingName="Column14" />
+                        <sfGrid:GridTextColumn MappingName="Column15" />
+                        <sfGrid:GridTextColumn MappingName="Column16" />
+                        <sfGrid:GridTextColumn MappingName="Column17" />
+                        <sfGrid:GridTextColumn MappingName="Column18" />
+                        <sfGrid:GridTextColumn MappingName="Column19" />
+                        <sfGrid:GridTextColumn MappingName="Column20" />
+                        <sfGrid:GridTextColumn MappingName="Column21" />
+                        <sfGrid:GridTextColumn MappingName="Column22" />
+                        <sfGrid:GridTextColumn MappingName="Column23" />
+                        <sfGrid:GridTextColumn MappingName="Column24" />
+                        <sfGrid:GridTextColumn MappingName="Column25" />
+                        <sfGrid:GridTextColumn MappingName="Column26" />
+                        <sfGrid:GridTextColumn MappingName="Column27" />
+                        <sfGrid:GridTextColumn MappingName="Column28" />
+                        <sfGrid:GridTextColumn MappingName="Column29" />
+                        <sfGrid:GridTextColumn MappingName="Column30" />
+                        <sfGrid:GridTextColumn MappingName="Column31" />
+                        <sfGrid:GridTextColumn MappingName="Column32" />
+                        <sfGrid:GridTextColumn MappingName="Column33" />
+                        <sfGrid:GridTextColumn MappingName="Column34" />
+                        <sfGrid:GridTextColumn MappingName="Column35" />
+                        <sfGrid:GridTextColumn MappingName="Column36" />
+                        <sfGrid:GridTextColumn MappingName="Column37" />
+                        <sfGrid:GridTextColumn MappingName="Column38" />
+                        <sfGrid:GridTextColumn MappingName="Column39" />
+                        <sfGrid:GridTextColumn MappingName="Column40" />
+                        <sfGrid:GridTextColumn MappingName="Column41" />
+                        <sfGrid:GridTextColumn MappingName="Column42" />
+                        <sfGrid:GridTextColumn MappingName="Column43" />
+                        <sfGrid:GridTextColumn MappingName="Column44" />
+                        <sfGrid:GridTextColumn MappingName="Column45" />
+                        <sfGrid:GridTextColumn MappingName="Column46" />
+                        <sfGrid:GridTextColumn MappingName="Column47" />
+                        <sfGrid:GridTextColumn MappingName="Column48" />
+                        <sfGrid:GridTextColumn MappingName="Column49" />
+                        <sfGrid:GridTextColumn MappingName="Column50" />
+                        <sfGrid:GridTextColumn MappingName="Column51" />
+                        <sfGrid:GridTextColumn MappingName="Column52" />
+                        <sfGrid:GridTextColumn MappingName="Column53" />
+                        <sfGrid:GridTextColumn MappingName="Column54" />
+                        <sfGrid:GridTextColumn MappingName="Column55" />
+                        <sfGrid:GridTextColumn MappingName="Column56" />
+                        <sfGrid:GridTextColumn MappingName="Column57" />
+                        <sfGrid:GridTextColumn MappingName="Column58" />
+                        <sfGrid:GridTextColumn MappingName="Column59" />
+                        <sfGrid:GridTextColumn MappingName="Column60" />
+                    </sfGrid:SfDataGrid.Columns>
+                </sfGrid:SfDataGrid>
+            </Grid>
+
+        </StackLayout>
+        
+        <Grid Padding="0,10,0,5" VerticalOptions="End" MinimumHeightRequest="50">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <button:SfButton Text="LƯU DL" FontSize="27" FontAttributes="Bold" Command="{Binding SaveCommand}" Grid.Column="0" HeightRequest="50"                        
+                                           VerticalOptions="CenterAndExpand" 
+                                           HorizontalOptions="FillAndExpand" BackgroundColor="#4EAF50">
+            </button:SfButton>
+            <button:SfButton Text="EXCEL" FontSize="27" FontAttributes="Bold" Command="{Binding ExportCommand}" Grid.Column="1" HeightRequest="50"                        
+                                           VerticalOptions="CenterAndExpand" 
+                                           HorizontalOptions="FillAndExpand" BackgroundColor="#4EAF50">
+            </button:SfButton>
+            <button:SfButton Text="XÓA DL" FontSize="27" FontAttributes="Bold" Command="{Binding DataCommand}" Grid.Column="2" HeightRequest="50"                     
+                                           VerticalOptions="CenterAndExpand" 
+                                           HorizontalOptions="FillAndExpand" BackgroundColor="#4EAF50">
+            </button:SfButton>
+        </Grid>
+
+        <sfPopup:SfPopupLayout x:Name="popupLayout" IsOpen="{Binding IsOpenPopupThung}">
+            <sfPopup:SfPopupLayout.PopupView >
+                <!--<sfPopup:PopupView HeaderTitle="Danh sách thiết bị trong thùng" AcceptButtonText="OK" DeclineButtonText="Hủy" WidthRequest="500" HeightRequest="500" AcceptCommand="{Binding AcceptCommand}" AppearanceMode="TwoButton" >-->
+                <sfPopup:PopupView HeaderTitle="Danh sách thiết bị trong thùng" WidthRequest="500" HeightRequest="500" AppearanceMode="TwoButton" >
+                    <sfPopup:PopupView.FooterTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <button:SfButton Text="OK" FontSize="20" FontAttributes="Bold" Command="{Binding AcceptCommand}" Grid.Column="0" HeightRequest="50"                       
+                                           VerticalOptions="CenterAndExpand" IsEnabled="{Binding IsAcceptPopup}"
+                                           HorizontalOptions="FillAndExpand" BackgroundColor="#4EAF50">
+                                </button:SfButton>
+                                <button:SfButton Text="HỦY" FontSize="20" FontAttributes="Bold" Command="{Binding DeclineCommand}" Grid.Column="1" HeightRequest="50"                  
+                                           VerticalOptions="CenterAndExpand" 
+                                           HorizontalOptions="FillAndExpand" BackgroundColor="#4EAF50">
+                                </button:SfButton>
+                            </Grid>
+                        </DataTemplate>
+                    </sfPopup:PopupView.FooterTemplate>
+                    <sfPopup:PopupView.ContentTemplate>
+                        <DataTemplate>
+                            <Grid x:Name="mGridLayout" AbsoluteLayout.LayoutFlags="All" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" 
+                         AbsoluteLayout.LayoutBounds="1,1,1,1" >
+                                <sfGrid:SfDataGrid x:Name="gridThung"
+                                   ItemsSource="{Binding DSThung,Mode=TwoWay}"
+                                   Style="{StaticResource styleDataGrid}"
+                                   GridStyle="{StaticResource styleGrid}"
+                >
+
+                                    <sfGrid:SfDataGrid.Columns >
+                                        <sfGrid:GridTextColumn MappingName="serialNum" HeaderText="Serial" HeaderFontAttribute="Bold"   HeaderCellTextSize="16"  MinimumWidth="120"/>
+                                        <!--<sfGrid:GridTextColumn MappingName="type" HeaderText="Loại" HeaderFontAttribute="Bold"   HeaderCellTextSize="16" ColumnSizer="Star">
+                                        </sfGrid:GridTextColumn>-->
+                                        <sfGrid:GridTextColumn MappingName="vttB_Status" HeaderText="T.Thái" HeaderFontAttribute="Bold"   HeaderCellTextSize="16" ColumnSizer="Star">
+                                        </sfGrid:GridTextColumn>
+                                    </sfGrid:SfDataGrid.Columns>
+                                </sfGrid:SfDataGrid>
+                            </Grid>
+                        </DataTemplate>
+                    </sfPopup:PopupView.ContentTemplate>
+                </sfPopup:PopupView>
+            </sfPopup:SfPopupLayout.PopupView>
+        </sfPopup:SfPopupLayout>
+
+        <sfPopup:SfPopupLayout x:Name="popupLayout1" IsOpen="{Binding IsOpenPopupQRCode}" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <sfPopup:SfPopupLayout.PopupView >
+                <sfPopup:PopupView HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" ShowFooter="False" ShowHeader="False">
+                    <sfPopup:PopupView.ContentTemplate>
+                        <DataTemplate>
+                            <Grid HorizontalOptions="FillAndExpand" >
+                                <zxing:ZXingBarcodeImageView
+                                    x:Name="qRCodeGen"
+                                    HeightRequest="500"
+                                    WidthRequest="500"
+                                    HorizontalOptions="FillAndExpand"
+                                    VerticalOptions="FillAndExpand"                                    
+                                    BarcodeValue="{Binding ImgUrl}"
+                                    BarcodeFormat="QR_CODE"
+                                    BarcodeOptions="{Binding BarcodeOptions}"                        
+                                    Margin="1" />
+                            </Grid>
+                        </DataTemplate>
+                    </sfPopup:PopupView.ContentTemplate>
+                </sfPopup:PopupView>
+            </sfPopup:SfPopupLayout.PopupView>
+        </sfPopup:SfPopupLayout>
+    </StackLayout>
+</ContentPage>
