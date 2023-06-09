@@ -36,6 +36,7 @@
     <WarningLevel>4</WarningLevel>
     <MtouchLink>SdkOnly</MtouchLink>
     <MtouchArch>x86_64</MtouchArch>
+    <MtouchDebug>false</MtouchDebug>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
     <DebugSymbols>true</DebugSymbols>
@@ -47,9 +48,9 @@
     <WarningLevel>4</WarningLevel>
     <MtouchArch>ARM64</MtouchArch>
     <CodesignKey>iPhone Developer</CodesignKey>
-    <MtouchDebug>true</MtouchDebug>
+    <MtouchDebug>false</MtouchDebug>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
-    <MtouchLink>None</MtouchLink>
+    <MtouchLink>SdkOnly</MtouchLink>
     <MtouchInterpreter>-all</MtouchInterpreter>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
