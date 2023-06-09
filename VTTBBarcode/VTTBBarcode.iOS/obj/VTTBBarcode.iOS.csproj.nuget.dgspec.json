@@ -1,0 +1,261 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\Xamarin\\BUILD APP CENTER\\VTTBBarcode\\VTTBBarcode\\VTTBBarcode.iOS\\VTTBBarcode.iOS.csproj": {}
+  },
+  "projects": {
+    "D:\\Xamarin\\BUILD APP CENTER\\VTTBBarcode\\VTTBBarcode\\VTTBBarcode.iOS\\VTTBBarcode.iOS.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Xamarin\\BUILD APP CENTER\\VTTBBarcode\\VTTBBarcode\\VTTBBarcode.iOS\\VTTBBarcode.iOS.csproj",
+        "projectName": "VTTBBarcode.iOS",
+        "projectPath": "D:\\Xamarin\\BUILD APP CENTER\\VTTBBarcode\\VTTBBarcode\\VTTBBarcode.iOS\\VTTBBarcode.iOS.csproj",
+        "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
+        "outputPath": "D:\\Xamarin\\BUILD APP CENTER\\VTTBBarcode\\VTTBBarcode\\VTTBBarcode.iOS\\obj\\",
+        "projectStyle": "PackageReference",
+        "skipContentFileWrite": true,
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\DevExpress 21.2\\Components\\Offline Packages",
+          "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Administrator\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 18.2.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 21.2.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "xamarinios10"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\DevExpress 18.2\\Components\\System\\Components\\Packages": {},
+          "C:\\Program Files (x86)\\DevExpress 21.2\\Components\\System\\Components\\Packages": {},
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "xamarinios10": {
+            "projectReferences": {
+              "D:\\Xamarin\\BUILD APP CENTER\\VTTBBarcode\\VTTBBarcode\\VTTBBarcode\\VTTBBarcode.csproj": {
+                "projectPath": "D:\\Xamarin\\BUILD APP CENTER\\VTTBBarcode\\VTTBBarcode\\VTTBBarcode\\VTTBBarcode.csproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "xamarinios10": {
+          "dependencies": {
+            "BTProgressHUD": {
+              "target": "Package",
+              "version": "[1.3.3, )"
+            },
+            "Syncfusion.Licensing": {
+              "target": "Package",
+              "version": "[18.2.0.55, )"
+            },
+            "Syncfusion.Xamarin.Buttons": {
+              "target": "Package",
+              "version": "[18.2.0.55, )"
+            },
+            "Syncfusion.Xamarin.Core": {
+              "target": "Package",
+              "version": "[18.2.0.55, )"
+            },
+            "Syncfusion.Xamarin.DataGridExport": {
+              "target": "Package",
+              "version": "[18.2.0.55, )"
+            },
+            "Syncfusion.Xamarin.SfComboBox": {
+              "target": "Package",
+              "version": "[18.2.0.55, )"
+            },
+            "Syncfusion.Xamarin.SfDataGrid": {
+              "target": "Package",
+              "version": "[18.2.0.55, )"
+            },
+            "Syncfusion.Xamarin.SfPopupLayout": {
+              "target": "Package",
+              "version": "[18.2.0.55, )"
+            },
+            "Xam.Plugin.Screenshot": {
+              "target": "Package",
+              "version": "[2.0.3, )"
+            },
+            "Xamarin.Essentials": {
+              "target": "Package",
+              "version": "[1.6.1, )"
+            },
+            "Xamarin.Forms": {
+              "target": "Package",
+              "version": "[5.0.0.2578, )"
+            }
+          }
+        }
+      },
+      "runtimes": {
+        "win": {
+          "#import": []
+        },
+        "win-x64": {
+          "#import": []
+        },
+        "win-x86": {
+          "#import": []
+        }
+      }
+    },
+    "D:\\Xamarin\\BUILD APP CENTER\\VTTBBarcode\\VTTBBarcode\\VTTBBarcode\\VTTBBarcode.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Xamarin\\BUILD APP CENTER\\VTTBBarcode\\VTTBBarcode\\VTTBBarcode\\VTTBBarcode.csproj",
+        "projectName": "VTTBBarcode",
+        "projectPath": "D:\\Xamarin\\BUILD APP CENTER\\VTTBBarcode\\VTTBBarcode\\VTTBBarcode\\VTTBBarcode.csproj",
+        "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
+        "outputPath": "D:\\Xamarin\\BUILD APP CENTER\\VTTBBarcode\\VTTBBarcode\\VTTBBarcode\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\DevExpress 21.2\\Components\\Offline Packages",
+          "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\",
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Administrator\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 18.2.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 21.2.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\DevExpress 18.2\\Components\\System\\Components\\Packages": {},
+          "C:\\Program Files (x86)\\DevExpress 21.2\\Components\\System\\Components\\Packages": {},
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.0": {
+            "targetAlias": "netstandard2.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.0": {
+          "targetAlias": "netstandard2.0",
+          "dependencies": {
+            "Com.Airbnb.Xamarin.Forms.Lottie": {
+              "target": "Package",
+              "version": "[3.0.4, )"
+            },
+            "NETStandard.Library": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.0.3, )",
+              "autoReferenced": true
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.1, )"
+            },
+            "Plugin.Permissions": {
+              "target": "Package",
+              "version": "[6.0.1, )"
+            },
+            "RestSharp": {
+              "target": "Package",
+              "version": "[108.0.3, )"
+            },
+            "Rg.Plugins.Popup": {
+              "target": "Package",
+              "version": "[2.1.0, )"
+            },
+            "Syncfusion.Licensing": {
+              "target": "Package",
+              "version": "[18.2.0.55, )"
+            },
+            "Syncfusion.Xamarin.Buttons": {
+              "target": "Package",
+              "version": "[18.2.0.55, )"
+            },
+            "Syncfusion.Xamarin.Core": {
+              "target": "Package",
+              "version": "[18.2.0.55, )"
+            },
+            "Syncfusion.Xamarin.DataGridExport": {
+              "target": "Package",
+              "version": "[18.2.0.55, )"
+            },
+            "Syncfusion.Xamarin.SfComboBox": {
+              "target": "Package",
+              "version": "[18.2.0.55, )"
+            },
+            "Syncfusion.Xamarin.SfDataGrid": {
+              "target": "Package",
+              "version": "[18.2.0.55, )"
+            },
+            "Syncfusion.Xamarin.SfPopupLayout": {
+              "target": "Package",
+              "version": "[18.2.0.55, )"
+            },
+            "System.DirectoryServices.AccountManagement": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "System.Net.Http.Json": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "Xam.Plugin.Connectivity": {
+              "target": "Package",
+              "version": "[3.2.0, )"
+            },
+            "Xam.Plugin.Screenshot": {
+              "target": "Package",
+              "version": "[2.0.3, )"
+            },
+            "Xamarin.Essentials": {
+              "target": "Package",
+              "version": "[1.6.1, )"
+            },
+            "Xamarin.Forms": {
+              "target": "Package",
+              "version": "[5.0.0.2578, )"
+            },
+            "ZXing.Net.Mobile": {
+              "target": "Package",
+              "version": "[2.4.1, )"
+            },
+            "ZXing.Net.Mobile.Forms": {
+              "target": "Package",
+              "version": "[2.4.1, )"
+            },
+            "sqlite-net-pcl": {
+              "target": "Package",
+              "version": "[1.8.116, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.411\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
