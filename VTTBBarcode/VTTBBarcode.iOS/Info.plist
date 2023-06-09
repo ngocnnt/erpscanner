@@ -25,13 +25,13 @@
 	<key>CFBundleDisplayName</key>
 	<string>EVNCPC-ERP SCANNER</string>
 	<key>CFBundleIdentifier</key>
-	<string>cpc.emec.erpscanner</string>
+	<string>cpc.Emec.Erpscanner</string>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>CFBundleName</key>
-	<string>cpc.erpscanner</string>
+	<string>cpc.Emec.Erpscanner</string>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/AppIcon.appiconset</string>
 	<key>NSAppTransportSecurity</key>
