@@ -27,7 +27,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>cpc.emec.erpscanner</string>
 	<key>CFBundleVersion</key>
-	<string>1.0</string>
+	<string>1.1</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>CFBundleName</key>
@@ -61,5 +61,7 @@
 	<string>This application needs your permission to save photos.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>This application needs your permission to save photos.</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>This application needs your permission to use calendar</string>
 </dict>
 </plist>
