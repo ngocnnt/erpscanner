@@ -488,7 +488,7 @@ namespace VTTBBarcode.ViewModels
                         {"nuoc_sx", "Vietnam"},
                         {"nhasx", "EMEC"},
                         {"SO_CTAO", ma.MaCode},
-                        {"TINH_TRANG", ""},
+                        {"TINH_TRANG", (ma.CheckedResult == true)?"Đạt":"Không Đạt"},
                         {"BB_TN", ""},
                         {"GHI_CHU", ""},
                         {"bPassword", "BBgncpcit@2022"},
