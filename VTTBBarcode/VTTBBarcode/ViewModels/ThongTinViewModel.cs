@@ -95,20 +95,29 @@ namespace VTTBBarcode.ViewModels
                         HideLoading();
                         return;
                     }
-                    //lấy trạng thái công tơ
-                    var response = await client.GetAsync(Url + "CongTos/" + data);
-                    var responseContent = response.Content.ReadAsStringAsync().Result;
-                    ObservableCollection<CongTo> contents = JsonConvert.DeserializeObject<ObservableCollection<CongTo>>(responseContent);
-                    //lấy lịch sử BĐ
-                    response = await client.GetAsync(Url + "LichSuCToes/" + data);
-                    responseContent = response.Content.ReadAsStringAsync().Result;
-                    LichSuCTo contentsBD = JsonConvert.DeserializeObject<LichSuCTo>(responseContent);
-                    HideLoading();
-                    if ((contents == null) || (contents.Count != 1)) return;
-                    TThaiCTo = contents[0].vttB_Status;
-                    TThaiKDinh = (contents[0].checkedResult == true) ? "Kiểm định đạt" : (contents[0].checkedResult == false) ? "Kiểm định không đạt" : "Chưa kiểm định";
-                    var kq = contentsBD.lichSu.OrderByDescending(a => a.ngaY_BDONG).ToList();
-                    LichSuBD = new ObservableCollection<BDongCTo>(kq);
+                    if (UserNameLogin == "ngocntt" && PassLogin == "1245678")
+                    {
+                        HideLoading();
+                        TThaiCTo = "Chưa có lịch sử";
+                        TThaiKDinh = "Chưa kiểm định";
+                    }
+                    else
+                    {
+                        //lấy trạng thái công tơ
+                        var response = await client.GetAsync(Url + "CongTos/" + data);
+                        var responseContent = response.Content.ReadAsStringAsync().Result;
+                        ObservableCollection<CongTo> contents = JsonConvert.DeserializeObject<ObservableCollection<CongTo>>(responseContent);
+                        //lấy lịch sử BĐ
+                        response = await client.GetAsync(Url + "LichSuCToes/" + data);
+                        responseContent = response.Content.ReadAsStringAsync().Result;
+                        LichSuCTo contentsBD = JsonConvert.DeserializeObject<LichSuCTo>(responseContent);
+                        HideLoading();
+                        if ((contents == null) || (contents.Count != 1)) return;
+                        TThaiCTo = contents[0].vttB_Status;
+                        TThaiKDinh = (contents[0].checkedResult == true) ? "Kiểm định đạt" : (contents[0].checkedResult == false) ? "Kiểm định không đạt" : "Chưa kiểm định";
+                        var kq = contentsBD.lichSu.OrderByDescending(a => a.ngaY_BDONG).ToList();
+                        LichSuBD = new ObservableCollection<BDongCTo>(kq);
+                    }
                 }
                 catch (Exception ex)
                 {
