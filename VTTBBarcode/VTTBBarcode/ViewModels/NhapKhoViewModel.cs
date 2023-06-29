@@ -32,6 +32,8 @@ namespace VTTBBarcode.ViewModels
         public Command DeclineCommand { get; }
         public Command ExportCommand { get; }
         public SfDataGrid sfDataGrid { get; set; }
+        public Command BackCommand { get; }
+
         //private DataHandler dataAccess;
         string _maCode;
         public string MaCode { get => _maCode; set => SetProperty(ref _maCode, value); }
@@ -153,6 +155,7 @@ namespace VTTBBarcode.ViewModels
             //this.dataAccess = new DataHandler();
             IsOpenPopupQRCode = false;
             LichSuCommand = new Command(OnLichSuCLicked);
+            BackCommand = new Command(OnBackCLicked);
 
             LoadData();
             ListKhoNhap = listKho;
@@ -885,6 +888,10 @@ namespace VTTBBarcode.ViewModels
             {
                 Shell.Current.Navigation.PushAsync(new LichSuPage(2));
             });
+        }
+        private void OnBackCLicked(object obj)
+        {
+            IsOpenPopupQRCode = false;
         }
     }
 }

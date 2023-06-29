@@ -236,7 +236,15 @@
 
         <sfPopup:SfPopupLayout x:Name="popupLayout1" IsOpen="{Binding IsOpenPopupQRCode}" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
             <sfPopup:SfPopupLayout.PopupView >
-                <sfPopup:PopupView HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" ShowFooter="False" ShowHeader="False">
+                <sfPopup:PopupView HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" ShowFooter="False" ShowHeader="True" ShowCloseButton="False">
+                    <sfPopup:PopupView.HeaderTemplate>
+                        <DataTemplate>
+                            <button:SfButton Command="{Binding BackCommand}" BackgroundColor="Transparent"                   
+                                           VerticalOptions="CenterAndExpand" 
+                                           HorizontalOptions="FillAndExpand">
+                            </button:SfButton>
+                        </DataTemplate>
+                    </sfPopup:PopupView.HeaderTemplate>
                     <sfPopup:PopupView.ContentTemplate>
                         <DataTemplate>
                             <Grid HorizontalOptions="FillAndExpand" >

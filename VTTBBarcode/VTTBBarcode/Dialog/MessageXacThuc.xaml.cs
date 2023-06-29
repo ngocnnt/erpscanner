@@ -85,6 +85,7 @@ namespace VTTBBarcode.Dialog
                                   (_, __) => OkCommand.ChangeCanExecute();
             CancelCommand = new Command(OnCloseClicked);
             loadData(true, true, true, true);
+            FormatTextNhap1 = "";
             if (form == "NK")
             {
                 HintNguoiNhan = "Người giao hàng";
@@ -150,7 +151,8 @@ namespace VTTBBarcode.Dialog
                 InfoPopup4 = (SelectedKhoPhu != null) ? SelectedKhoPhu.SECONDARY_INVENTORY_NAME : ""; 
                 InfoPopup5 = (SelectedCongTrinh == null) ? "" : ((SelectedCongTrinh.SEGMENT1 == "/") ? "" : SelectedCongTrinh.SEGMENT1);
                 InfoPopup6 = (SelectedDVTC == null) ? "" : ((SelectedDVTC.SUPPLIER_NUMBER == "/") ? "" : SelectedDVTC.SUPPLIER_NUMBER);
-                InfoPopup7 = string.Format("{0:#,##0.##}", decimal.Parse(TextNhap1));
+                if (TextNhap1 != null)
+                    InfoPopup7 = string.Format("{0:#,##0.##}", decimal.Parse(TextNhap1));
                 InfoPopup8 = TextNhap2;
                 await Navigation.PopPopupAsync();
                 _tsk.SetResult(DialogReturn.OK);
