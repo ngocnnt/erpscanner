@@ -25,7 +25,7 @@
 	<key>CFBundleDisplayName</key>
 	<string>EVNCPC-ERP SCANNER</string>
 	<key>CFBundleIdentifier</key>
-	<string>cpc.emec.erpscanner</string>
+	<string>cpc.erpscanner</string>
 	<key>CFBundleVersion</key>
 	<string>1.4</string>
 	<key>UILaunchStoryboardName</key>
