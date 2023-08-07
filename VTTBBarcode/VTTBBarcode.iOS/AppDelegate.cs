@@ -32,7 +32,8 @@ namespace VTTBBarcode.iOS
             Syncfusion.XForms.iOS.Border.SfBorderRenderer.Init();
             Syncfusion.SfDataGrid.XForms.iOS.SfDataGridRenderer.Init();
             Syncfusion.XForms.iOS.EffectsView.SfEffectsViewRenderer.Init();
-            Syncfusion.XForms.iOS.PopupLayout.SfPopupLayoutRenderer.Init(); 
+            Syncfusion.XForms.iOS.PopupLayout.SfPopupLayoutRenderer.Init();
+            BarcodeScanner.Mobile.iOS.Initializer.Init();            
             LoadApplication(new App());
 
             return base.FinishedLaunching(app, options);

@@ -157,7 +157,7 @@
             <Grid x:Name="mGridLayoutCMIS" AbsoluteLayout.LayoutFlags="All" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" 
                          AbsoluteLayout.LayoutBounds="1,1,1,1" >
                 <sfGrid:SfDataGrid x:Name="gridMaCodeCMIS"
-                                   ItemsSource="{Binding NKTableCMIS,Mode=TwoWay}"                                  
+                                   ItemsSource="{Binding CKTableCMIS,Mode=TwoWay}"                                  
                                    GridStyle="{StaticResource styleGridInvisible}" >
                     <sfGrid:SfDataGrid.Columns >
                         <sfGrid:GridTextColumn MappingName="MA_CTO" />
@@ -234,21 +234,25 @@
             </sfPopup:SfPopupLayout.PopupView>
         </sfPopup:SfPopupLayout>
 
-        <sfPopup:SfPopupLayout x:Name="popupLayout1" IsOpen="{Binding IsOpenPopupQRCode}" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-            <sfPopup:SfPopupLayout.PopupView >
-                <sfPopup:PopupView HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" ShowFooter="False" ShowHeader="True" ShowCloseButton="False">
-                    <sfPopup:PopupView.HeaderTemplate>
-                        <DataTemplate>
-                            <button:SfButton Command="{Binding BackCommand}" BackgroundColor="Transparent"                   
-                                           VerticalOptions="CenterAndExpand" 
-                                           HorizontalOptions="FillAndExpand">
-                            </button:SfButton>
-                        </DataTemplate>
-                    </sfPopup:PopupView.HeaderTemplate>
+        <sfPopup:SfPopupLayout x:Name="popupLayout1" IsOpen="{Binding IsOpenPopupQRCode}" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"  >
+            <sfPopup:SfPopupLayout.PopupView>
+                <sfPopup:PopupView HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" ShowFooter="False" ShowHeader="False" ShowCloseButton="False">
                     <sfPopup:PopupView.ContentTemplate>
                         <DataTemplate>
-                            <Grid HorizontalOptions="FillAndExpand" >
-                                <zxing:ZXingBarcodeImageView
+                            <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="4*"/>
+                                    <RowDefinition Height="5*"/>
+                                </Grid.RowDefinitions>
+                                <button:SfButton Grid.Row="0" Command="{Binding BackCommand}" BackgroundColor="Transparent" HeightRequest="100"                 
+                                           VerticalOptions="CenterAndExpand" 
+                                           HorizontalOptions="FillAndExpand" >
+                                </button:SfButton>
+                                <StackLayout Grid.Row="1" Margin="10,0,10,0" HeightRequest="400">
+                                    <Label x:Name="xQRCodeInfo" Text="{Binding QRCodeInfo}" LineBreakMode="WordWrap" TextColor="Black" FontSize="16"/>
+                                </StackLayout>
+                                <zxing:ZXingBarcodeImageView Grid.Row="2"
                                     x:Name="qRCodeGen"
                                     HeightRequest="500"
                                     WidthRequest="500"

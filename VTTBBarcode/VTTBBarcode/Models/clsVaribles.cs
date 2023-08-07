@@ -38,14 +38,44 @@ namespace VTTBBarcode.Models
         public static string TThai05 = "Dưới lưới - Ngoài kho. Công tơ đang xuất đi gia công sửa chữa và bảo hành.";
         public static string TThai06 = "Đã phá hủy";
         public static string TThai00 = "Chưa có lịch sử";
-        public static string InfoPopup1 = "InfoPopup1";
-        public static string InfoPopup2 = "InfoPopup2";
-        public static string InfoPopup3 = "InfoPopup3";
-        public static string InfoPopup4 = "InfoPopup4";
-        public static string InfoPopup5 = "InfoPopup5";
-        public static string InfoPopup6 = "InfoPopup6";
-        public static string InfoPopup7 = "InfoPopup7";
-        public static string InfoPopup8 = "InfoPopup8";
+        public static string InfoPopup1NK = "";
+        public static string InfoPopup2NK = "";
+        public static string InfoPopup3NK = "";
+        public static string InfoPopup4NK = "";
+        public static string InfoPopup5NK = "";
+        public static string InfoPopup6NK = "";
+        public static string InfoPopup7NK = "";
+        public static string InfoPopup1CK = "";
+        public static string InfoPopup3CK = "";
+        public static string InfoPopup4CK = "";
+        public static string InfoPopup5CK = "";
+        public static string InfoPopup6CK = "";
+        public static string InfoPopup1XK = "";
+        public static string InfoPopup2XK = "";
+        public static string InfoPopup3XK = "";
+        public static string InfoPopup5XK = "";
+        public static string InfoPopup6XK = "";
+        public static string InfoPopup7XK = "";
+        public static string InfoPopup8XK = "";
+        public static string InfoPopup1NKSave = "InfoPopup1NKSave";
+        public static string InfoPopup2NKSave = "InfoPopup2NKSave";
+        public static string InfoPopup3NKSave = "InfoPopup3NKSave";
+        public static string InfoPopup4NKSave = "InfoPopup4NKSave";
+        public static string InfoPopup5NKSave = "InfoPopup5NKSave";
+        public static string InfoPopup6NKSave = "InfoPopup6NKSave";
+        public static string InfoPopup7NKSave = "InfoPopup7NKSave";
+        public static string InfoPopup1CKSave = "InfoPopup1CKSave";
+        public static string InfoPopup3CKSave = "InfoPopup3CKSave";
+        public static string InfoPopup4CKSave = "InfoPopup4CKSave";
+        public static string InfoPopup5CKSave = "InfoPopup5CKSave";
+        public static string InfoPopup6CKSave = "InfoPopup6CKSave";
+        public static string InfoPopup1XKSave = "InfoPopup1XKSave";
+        public static string InfoPopup2XKSave = "InfoPopup2XKSave";
+        public static string InfoPopup3XKSave = "InfoPopup3XKSave";
+        public static string InfoPopup5XKSave = "InfoPopup5XKSave";
+        public static string InfoPopup6XKSave = "InfoPopup6XKSave";
+        public static string InfoPopup7XKSave = "InfoPopup7XKSave";
+        public static string InfoPopup8XKSave = "InfoPopup8XKSave";
         public enum DialogReturn
         {
             OK = 0,
@@ -61,6 +91,7 @@ namespace VTTBBarcode.Models
             public string code_ERP { get; set; }
             public string type { get; set; }
             public string code_CLoai { get; set; }
+            public string code_Chung { get; set; }
             public string nhaSX { get; set; }
             public string nuocSX { get; set; }
             public string tsktChung { get; set; }
@@ -247,6 +278,7 @@ namespace VTTBBarcode.Models
         }
         public class DanhSachVendor
         {
+            public string VENDOR_ID { get; set; }
             public string SUPPLIER_NUMBER { get; set; }
             public string VENDOR_NAME { get; set; }
             public string MA_SO_THUE { get; set; }

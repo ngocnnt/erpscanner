@@ -4,5 +4,9 @@
     <SelectedDevice>iPhone 13 iOS 15.0</SelectedDevice>
     <ActiveDebugProfile>iPhone 13 iOS 15.0</ActiveDebugProfile>
     <DefaultDevice>iPhone 13 iOS 15.0</DefaultDevice>
+    <DeveloperId>
+    </DeveloperId>
+    <DevelopmentTeamId>
+    </DevelopmentTeamId>
   </PropertyGroup>
 </Project>

@@ -25,6 +25,7 @@ namespace VTTBBarcode.ViewModels
 {
     public class ChuyenKhoViewModel : BaseViewModel
     {
+        Page2 _myModalPage;
         public Command ScanCommand { get; }
         public Command SaveCommand { get; }
         public Command DataCommand { get; }
@@ -33,6 +34,14 @@ namespace VTTBBarcode.ViewModels
         public Command ExportCommand { get; }
         public SfDataGrid sfDataGrid { get; set; }
         public Command BackCommand { get; }
+
+        string _qRCodeInfo;
+        public string QRCodeInfo { get => _qRCodeInfo; set => SetProperty(ref _qRCodeInfo, value); }
+        string QRCodeDataTen = "";
+        string QRCodeDataMahieu = "";
+        string QRCodeDataMaGop = "";
+        string QRCodeDataNhaSX = "";
+        string QRCodeDataSoPhieu = "";
 
         //private DataHandler dataAccess;
         string _maCode;
@@ -178,140 +187,182 @@ namespace VTTBBarcode.ViewModels
                 DependencyService.Get<IToast>().Show("Vui lòng chọn các thông tin chuyển kho trước khi thực hiện quét!");
                 return;
             }
-            var scanner = new ZXing.Mobile.MobileBarcodeScanner();
-            ZXingScannerView zxing = new ZXingScannerView();
-            ZXing.Result result = null;
             IsOpenPopupThung = false;
             _chophepTH = true;
-            TimeSpan ts = new TimeSpan(0, 0, 0, 3, 0);
-            Device.StartTimer(ts, () => {
-                if (zxing.IsScanning)
-                    zxing.AutoFocus();
-                return true;
-            });
-            result = await scanner.Scan();
-            if (result == null) return;  //user bấm back
-            string type = result.BarcodeFormat.ToString();
-            if (result != null)
+            if (Device.RuntimePlatform == Device.Android && Xamarin.Essentials.DeviceInfo.Version.Major < 8)
             {
-                DependencyService.Get<ISound>().playBeepSound();
-                MaCode = result.Text;
-                if (!CheckInternet())
+                var scanner = new ZXing.Mobile.MobileBarcodeScanner();
+                ZXingScannerView zxing = new ZXingScannerView();
+                ZXing.Result result = null;
+                TimeSpan ts = new TimeSpan(0, 0, 0, 3, 0);
+                Device.StartTimer(ts, () =>
                 {
-                    return;
+                    if (zxing.IsScanning)
+                        zxing.AutoFocus();
+                    return true;
+                });
+                result = await scanner.Scan();
+                if (result == null) return;  //user bấm back
+                string type = result.BarcodeFormat.ToString();
+                if (result != null)
+                {
+                    DependencyService.Get<ISound>().playBeepSound();
+                    ShowResult(result.Text, result.BarcodeFormat.ToString());
                 }
-                try
+            }
+            else
+            {
+                App.Current.ModalPopping += HandleModalPopping;
+                _myModalPage = new Page2();
+                await App.Current.MainPage.Navigation.PushModalAsync(_myModalPage);
+            }
+        }
+        private async void HandleModalPopping(object sender, ModalPoppingEventArgs e)
+        {
+            if (e.Modal == _myModalPage)
+            {
+                // now we can retrieve that phone number:
+                var result = _myModalPage.data;
+                var result1 = _myModalPage.format;
+                _myModalPage = null;
+
+                // remember to remove the event handler:
+                App.Current.ModalPopping -= HandleModalPopping;
+                if (result != null && result != "")
                 {
-                    ShowLoading("Đang kiểm tra vui lòng đợi");
-                    await Task.Delay(200);
-                    string data = "";
-                    if (result.BarcodeFormat.ToString() == "QR_CODE")
-                    {
-                        //lấy ds cto từ thùng QRcode
-                        if (result.Text.Contains("-"))
-                        {
-                            var dataT = new
-                            {
-                                cloai = result.Text,
-                            };
-                            var httpContentT = new StringContent(JsonConvert.SerializeObject(dataT), Encoding.UTF8, "application/json");
-                            var responseT = await client.PostAsync(UrlThung + "barcode_check_sothung", httpContentT);
-                            var responseContentT = responseT.Content.ReadAsStringAsync().Result;
-                            data = responseContentT;
-                            data = data.Replace("\"", "");
-                        }
-                        else
-                        {
-                            data = result.Text.Replace("_", ",");
-                        }
-                    }
-                    else data = result.Text;
-                    if (data == "")
-                    {
-                        HideLoading();
-                        return;
-                    }
-                    //lấy trạng thái công tơ
-                    var response = await client.GetAsync(Url + "CongTos/" + data); 
-                    var responseContent = response.Content.ReadAsStringAsync().Result;
-                    ObservableCollection<CongTo> contents = JsonConvert.DeserializeObject<ObservableCollection<CongTo>>(responseContent);
-                    HideLoading();
-                    if (result.BarcodeFormat.ToString() == "QR_CODE")
-                    {
-                        DSThung = contents;
-                        foreach (CongTo ct in DSThung)
-                        {
-                            if (ct.vttB_Status != TThai02)
-                            {
-                                DependencyService.Get<IToast>().Show(string.Format("Trong thùng có serial ở trạng thái không cho phép thực hiện '{0}'. Anh/ chị vui lòng kiểm tra lại!", Title));
-                                _chophepTH = false;
-                                return;
-                            }
-                            if (ct.kho == SelectedKho.MAKHO)
-                            {
-                                DependencyService.Get<IToast>().Show(string.Format("Trong thùng có serial đang ở kho trùng với kho chuyển đến. Anh/ chị vui lòng kiểm tra lại!", Title));
-                                _chophepTH = false;
-                                return;
-                            }
-                        }
-                        IsOpenPopupThung = true;
-                    }
-                    else
-                    {
-                        MaVTTB = "3.60.05.130.VIE.SE." + ((contents[0].checkedResult == true) ? "A70" : ((contents[0].checkedResult == false) ? "D50" : "C70"));
-                        KhoTon = contents[0].ten_Kho;
-                        if (contents[0].vttB_Status != TThai02)
-                        {
-                            DependencyService.Get<IToast>().Show(string.Format("Trạng thái serial {0}: {1}, không cho phép thực hiện '{2}'. Anh/ chị vui lòng kiểm tra lại!", data, contents[0].vttB_Status, Title));
-                            return;
-                        }
-                        if (contents[0].kho == SelectedKho.MAKHO)
-                        {
-                            DependencyService.Get<IToast>().Show(string.Format("Kho chuyển đến không được trùng với kho đang tồn. Anh/ chị vui lòng kiểm tra lại!", data, contents[0].vttB_Status, Title));
-                            return;
-                        }
-                        bool itemExists = CKTable.Any(item =>
-                        {
-                            return (item.MaCode == result.Text) &&
-                                   (item.User == UserName);
-                        });
-                        if (!itemExists)
-                        {
-                            s++;
-                            ChuyenKhoTable dt = new ChuyenKhoTable();
-                            dt.User = UserName;
-                            dt.MaCode = result.Text;
-                            dt.vttB_Status = contents[0].vttB_Status;
-                            dt.MaVTTB = MaVTTB;
-                            dt.HinhThucCK = SelectedHTCK;
-                            dt.KhoTon = contents[0].kho;
-                            dt.KhoTonPhu = contents[0].kho_Phu;
-                            dt.KhoChuyen = SelectedKho.MAKHO;
-                            dt.NgayXL = DateTime.Now;
-                            dt.STT = s;
-                            dt.CLoai = contents[0].code_CLoai != null ? contents[0].code_CLoai : (contents[0].code == "DT01P-RF" ? "D43" : "");
-                            dt.NamSX = contents[0].namSX;
-                            dt.CheckedInfo = contents[0].checkedInfo;
-                            dt.CheckedEXDate = (contents[0].checkedEXDate != null) ? contents[0].checkedEXDate.Value.ToString("dd/MM/yyyy") : "";
-                            dt.CheckedResult = contents[0].checkedResult;
-                            CKTable.Add(dt);
-                            DataCommand?.ChangeCanExecute();
-                        }
-                    }    
-                }
-                catch (Exception ex)
-                {
-                    HideLoading();
-                }
-                finally
-                {
+                    DependencyService.Get<ISound>().playBeepSound();
+                    ShowResult(result, result1);
                 }
             }
         }
-
+        private async void ShowResult(string result, string format)
+        {
+            MaCode = result;
+            if (!CheckInternet())
+            {
+                return;
+            }
+            try
+            {
+                ShowLoading("Đang kiểm tra vui lòng đợi");
+                await Task.Delay(200);
+                string data = "";
+                //if (format.ToUpper() == "QR_CODE" || format.ToUpper() == "QRCODE")
+                if (result.Contains("-") || result.Contains("_"))
+                {
+                    //lấy ds cto từ thùng QRcode
+                    if (result.Contains("-"))
+                    {
+                        var dataT = new
+                        {
+                            cloai = result,
+                        };
+                        var httpContentT = new StringContent(JsonConvert.SerializeObject(dataT), Encoding.UTF8, "application/json");
+                        var responseT = await client.PostAsync(UrlThung + "barcode_check_sothung", httpContentT);
+                        var responseContentT = responseT.Content.ReadAsStringAsync().Result;
+                        data = responseContentT;
+                        data = data.Replace("\"", "");
+                    }
+                    else
+                    {
+                        data = result.Replace("_", ",");
+                    }
+                }
+                else data = result;
+                if (data == "")
+                {
+                    HideLoading();
+                    return;
+                }
+                //lấy trạng thái công tơ
+                var response = await client.GetAsync(Url + "CongTos/" + data);
+                var responseContent = response.Content.ReadAsStringAsync().Result;
+                ObservableCollection<CongTo> contents = JsonConvert.DeserializeObject<ObservableCollection<CongTo>>(responseContent);
+                HideLoading();
+                //if (format.ToUpper() == "QR_CODE" || format.ToUpper() == "QRCODE")
+                if (result.Contains("-") || result.Contains("_"))
+                {
+                    DSThung = contents;
+                    foreach (CongTo ct in DSThung)
+                    {
+                        if (ct.vttB_Status != TThai02)
+                        {
+                            DependencyService.Get<IToast>().Show(string.Format("Trong thùng có serial ở trạng thái không cho phép thực hiện '{0}'. Anh/ chị vui lòng kiểm tra lại!", Title));
+                            _chophepTH = false;
+                            return;
+                        }
+                        if (ct.kho == SelectedKho.MAKHO)
+                        {
+                            DependencyService.Get<IToast>().Show(string.Format("Trong thùng có serial đang ở kho trùng với kho chuyển đến. Anh/ chị vui lòng kiểm tra lại!", Title));
+                            _chophepTH = false;
+                            return;
+                        }
+                    }
+                    IsOpenPopupThung = true;
+                }
+                else
+                {
+                    //MaVTTB = "3.60.05.130.VIE.SE." + ((contents[0].checkedResult == true) ? "A70" : ((contents[0].checkedResult == false) ? "D50" : "C70"));
+                    MaVTTB = contents[0].vttB_Quality;
+                    KhoTon = contents[0].ten_Kho;
+                    if (contents[0].vttB_Status != TThai02)
+                    {
+                        DependencyService.Get<IToast>().Show(string.Format("Trạng thái serial {0}: {1}, không cho phép thực hiện '{2}'. Anh/ chị vui lòng kiểm tra lại!", data, contents[0].vttB_Status, Title));
+                        return;
+                    }
+                    if (contents[0].kho == SelectedKho.MAKHO)
+                    {
+                        DependencyService.Get<IToast>().Show(string.Format("Kho chuyển đến không được trùng với kho đang tồn. Anh/ chị vui lòng kiểm tra lại!", data, contents[0].vttB_Status, Title));
+                        return;
+                    }
+                    bool itemExists = CKTable.Any(item =>
+                    {
+                        return (item.MaCode == result) &&
+                               (item.User == UserName);
+                    });
+                    if (!itemExists)
+                    {
+                        s++;
+                        ChuyenKhoTable dt = new ChuyenKhoTable();
+                        dt.User = UserName;
+                        dt.MaCode = result;
+                        dt.vttB_Status = contents[0].vttB_Status;
+                        dt.MaVTTB = contents[0].vttB_Quality;// MaVTTB;
+                        dt.HinhThucCK = SelectedHTCK;
+                        dt.KhoTon = contents[0].kho;
+                        dt.KhoTonPhu = contents[0].kho_Phu;
+                        dt.KhoChuyen = SelectedKho.MAKHO;
+                        dt.NgayXL = DateTime.Now;
+                        dt.STT = s;
+                        dt.CLoai = contents[0].code_CLoai != null ? contents[0].code_CLoai : (contents[0].code == "DT01P-RF" ? "D43" : "");
+                        dt.NamSX = contents[0].namSX;
+                        dt.CheckedInfo = contents[0].checkedInfo;
+                        dt.CheckedEXDate = (contents[0].checkedEXDate != null) ? contents[0].checkedEXDate.Value.ToString("dd/MM/yyyy") : "";
+                        dt.CheckedResult = contents[0].checkedResult;
+                        CKTable.Add(dt);
+                        DataCommand?.ChangeCanExecute();
+                        if (CKTable.Count == 1) //lưu ở record đầu
+                        {
+                            QRCodeDataTen = contents[0].descriptionName;
+                            QRCodeDataMahieu = contents[0].code;
+                            QRCodeDataMaGop = contents[0].code_Chung;
+                            QRCodeDataNhaSX = contents[0].nhaSX;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                HideLoading();
+            }
+            finally
+            {
+            }
+        }
         private async void OnAcceptCLicked(object obj)
         {
-            MaVTTB = "3.60.05.130.VIE.SE." + ((DSThung[0].checkedResult == true) ? "A70" : ((DSThung[0].checkedResult == false) ? "D50" : "C70"));
+            //MaVTTB = "3.60.05.130.VIE.SE." + ((DSThung[0].checkedResult == true) ? "A70" : ((DSThung[0].checkedResult == false) ? "D50" : "C70"));
+            MaVTTB = DSThung[0].vttB_Quality;
             KhoTon = DSThung[0].ten_Kho;
             if (_chophepTH)
             {
@@ -329,7 +380,7 @@ namespace VTTBBarcode.ViewModels
                         ds.User = UserName;
                         ds.MaCode = ct.serialNum;
                         ds.vttB_Status = ct.vttB_Status;
-                        ds.MaVTTB = MaVTTB;
+                        ds.MaVTTB = ct.vttB_Quality;// MaVTTB;
                         ds.HinhThucCK = SelectedHTCK;
                         ds.KhoTon = ct.kho;
                         ds.KhoTonPhu = ct.kho_Phu;
@@ -343,6 +394,13 @@ namespace VTTBBarcode.ViewModels
                         ds.CheckedResult = ct.checkedResult;
                         CKTable.Add(ds);
                         DataCommand?.ChangeCanExecute();
+                        if (CKTable.Count == 1) //lưu ở record đầu
+                        {
+                            QRCodeDataTen = ct.descriptionName;
+                            QRCodeDataMahieu = ct.code;
+                            QRCodeDataMaGop = ct.code_Chung;
+                            QRCodeDataNhaSX = ct.nhaSX;
+                        }
                     }
                 }
             }
@@ -364,6 +422,11 @@ namespace VTTBBarcode.ViewModels
             }
             CKTable = _listTemp;
             DataCommand?.ChangeCanExecute();
+            QRCodeDataTen = "";
+            QRCodeDataMahieu = "";
+            QRCodeDataMaGop = "";
+            QRCodeDataNhaSX = "";
+            QRCodeDataSoPhieu = "";
         }
 
         private void OnSaveCLicked(object obj)
@@ -412,19 +475,35 @@ namespace VTTBBarcode.ViewModels
                 try
                 {
                     //lấy thông tin
-                    var ok = await new MessageXacThuc("CK", CKTable[0].KhoTon).Show();
-                    if (ok == DialogReturn.OK)
+                    var ok = await new MessageXacThuc("CK", CKTable[0].KhoChuyen).Show();
+                    if (ok == DialogReturn.Cancel)
                     {
-                        //Preferences.Set(Config.AprroveFinger, _toggledVanTay);
+                        return;
                     }
                     //tạo table erp và cmis
                     ShowLoading("Vui lòng đợi");
                     await Task.Delay(200);
                     exportERP();
                     exportCMIS();
+                    if (QRCodeDataTen == "")
+                    {
+                        var response = await client.GetAsync(Url + "CongTos/" + CKTable[0].MaCode);
+                        var responseContent = response.Content.ReadAsStringAsync().Result;
+                        ObservableCollection<CongTo> contents = JsonConvert.DeserializeObject<ObservableCollection<CongTo>>(responseContent);
+                        QRCodeDataTen = contents[0].descriptionName;
+                        QRCodeDataMahieu = contents[0].code;
+                        QRCodeDataMaGop = contents[0].code_Chung;
+                        QRCodeDataNhaSX = contents[0].nhaSX;
+                    }
                     HideLoading();
                     DependencyService.Get<IToast>().Show("Xuất excel thành công!");
                     //show mã QRCode lên mh
+                    QRCodeInfo = "Tên mô tả VTTB: " + QRCodeDataTen + Environment.NewLine;
+                    QRCodeInfo += "Mã hiệu hàng hóa: " + QRCodeDataMahieu + Environment.NewLine;
+                    QRCodeInfo += "Mã VTTB | Kiểu | Mã CL: " + QRCodeDataMaGop + Environment.NewLine;
+                    QRCodeInfo += "Nhà sản xuất: " + QRCodeDataNhaSX + Environment.NewLine;
+                    QRCodeInfo += "Số phiếu giao dịch: " + QRCodeDataSoPhieu + Environment.NewLine;
+                    QRCodeInfo += "Danh sách số chế tạo: " + dsSerial.Replace("_", "; ") + Environment.NewLine;
                     ImgUrl = dsSerial;
                     IsOpenPopupQRCode = true;
                     LoadData();
@@ -449,7 +528,7 @@ namespace VTTBBarcode.ViewModels
             }
         }
 
-        ObservableCollection<ObservableCollection<ChuyenKhoTable>> Split(ObservableCollection<ChuyenKhoTable> collection, int splitBy = 10)
+        ObservableCollection<ObservableCollection<ChuyenKhoTable>> Split(ObservableCollection<ChuyenKhoTable> collection, int splitBy)
         {
             var result = collection
                        .Select((x, i) => new { index = i, item = x })
@@ -472,7 +551,7 @@ namespace VTTBBarcode.ViewModels
         public async void exportERP()
         {
             ObservableCollection<ObservableCollection<ChuyenKhoTable>> groupSplit = new ObservableCollection<ObservableCollection<ChuyenKhoTable>>();
-            groupSplit = Split(CKTable);
+            groupSplit = Split(CKTable, CKTable.Count); //Split(CKTable, 10);
             for (int j = 0; j < groupSplit.Count; j++)
             {
                 CKTableERP = new ObservableCollection<NhapKhoTableERP>();
@@ -499,17 +578,17 @@ namespace VTTBBarcode.ViewModels
                     ds.Column17 = @"\^L";
                     ds.Column18 = @"\%O";
                     ds.Column19 = @"\{TAB}";
-                    ds.Column20 = InfoPopup3;
+                    ds.Column20 = InfoPopup3CK;
                     ds.Column21 = @"\{TAB 7}";
                     ds.Column22 = "*SL0,5";
                     ds.Column23 = @"\{TAB 2}";
                     ds.Column24 = "Direct Transaction Informations";
                     ds.Column25 = @"\{TAB}";
-                    ds.Column26 = InfoPopup1;
+                    ds.Column26 = InfoPopup1CK;
                     ds.Column27 = @"\{TAB 5}";
-                    ds.Column28 = InfoPopup6;
+                    ds.Column28 = InfoPopup6CK;
                     ds.Column29 = @"\{TAB}";
-                    ds.Column30 = InfoPopup5;
+                    ds.Column30 = InfoPopup5CK;
                     ds.Column31 = @"\%O";
                     ds.Column32 = @"\%R";
                     ds.Column33 = "*SL0,5";
@@ -517,7 +596,7 @@ namespace VTTBBarcode.ViewModels
                     ds.Column35 = @"\{TAB}";
                     ds.Column36 = groupSplit[j][0].KhoTonPhu;
                     ds.Column37 = @"\{TAB 3}";
-                    ds.Column38 = InfoPopup4;
+                    ds.Column38 = InfoPopup4CK;
                     ds.Column39 = @"\{TAB 2}";
                     ds.Column40 = CKTable.Count.ToString();
                     ds.Column41 = @"\{TAB}";
@@ -563,17 +642,17 @@ namespace VTTBBarcode.ViewModels
                         ds.Column17 = @"\^L";
                         ds.Column18 = @"\%O";
                         ds.Column19 = @"\{TAB}";
-                        ds.Column20 = InfoPopup3;
+                        ds.Column20 = InfoPopup3CK;
                         ds.Column21 = @"\{TAB 7}";
                         ds.Column22 = "*SL0,5";
                         ds.Column23 = @"\{TAB 2}";
                         ds.Column24 = "Direct Transaction Informations";
                         ds.Column25 = @"\{TAB}";
-                        ds.Column26 = InfoPopup1;
+                        ds.Column26 = InfoPopup1CK;
                         ds.Column27 = @"\{TAB 5}";
-                        ds.Column28 = InfoPopup6;
+                        ds.Column28 = InfoPopup6CK;
                         ds.Column29 = @"\{TAB}";
-                        ds.Column30 = InfoPopup5;
+                        ds.Column30 = InfoPopup5CK;
                         ds.Column31 = @"\%O";
                         ds.Column32 = @"\%R";
                         ds.Column33 = "*SL0,5";
@@ -581,7 +660,7 @@ namespace VTTBBarcode.ViewModels
                         ds.Column35 = @"\{TAB}";
                         ds.Column36 = ct.KhoTonPhu;
                         ds.Column37 = @"\{TAB 3}";
-                        ds.Column38 = InfoPopup4;
+                        ds.Column38 = InfoPopup4CK;
                         ds.Column39 = @"\{TAB 2}";
                         ds.Column40 = CKTable.Count.ToString();
                         ds.Column41 = @"\{TAB}";
@@ -777,6 +856,7 @@ namespace VTTBBarcode.ViewModels
                         dataAccess.SaveRecordChuyenKho(ct);
                     }
                     fileNameex = ma.TenFile + ".jpg";
+                    QRCodeDataSoPhieu = filename;
                 }
             }
         }
@@ -820,7 +900,8 @@ namespace VTTBBarcode.ViewModels
         {
             Device.BeginInvokeOnMainThread(() =>
             {
-                Shell.Current.Navigation.PushAsync(new LichSuPage(3));
+                //Shell.Current.Navigation.PushAsync(new LichSuPage(3));     
+                Shell.Current.Navigation.PushModalAsync(new LichSuPage(3));
             });
         }
 

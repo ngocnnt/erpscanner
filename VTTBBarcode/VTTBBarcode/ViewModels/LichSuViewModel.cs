@@ -13,8 +13,6 @@ using VTTBBarcode.Models;
 using VTTBBarcode.Services;
 using Xamarin.Essentials;
 using Xamarin.Forms;
-using ZXing.Common;
-using ZXing.Net.Mobile.Forms;
 using static VTTBBarcode.Models.clsVaribles;
 
 namespace VTTBBarcode.ViewModels

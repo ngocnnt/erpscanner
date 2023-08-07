@@ -15,6 +15,8 @@ namespace VTTBBarcode.Droid
         {
             base.OnCreate(savedInstanceState);
             MobileBarcodeScanner.Initialize(Application);
+            //BarcodeScanner.Mobile.Droid.RendererInitializer.Init();
+            GoogleVisionBarCodeScanner.Droid.RendererInitializer.Init();
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             Rg.Plugins.Popup.Popup.Init(this);

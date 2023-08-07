@@ -17,11 +17,13 @@ using ZXing.Net.Mobile.Forms;
 using static VTTBBarcode.Models.clsVaribles;
 using VTTBBarcode.Dialog;
 using RestSharp;
+using VTTBBarcode.Views;
 
 namespace VTTBBarcode.ViewModels
 {
     public class KiemKeViewModel : BaseViewModel
     {
+        Page2 _myModalPage;
         public Command ScanCommand { get; }
         public Command SaveCommand { get; }
         public Command ExportCommand { get; }
@@ -123,114 +125,150 @@ namespace VTTBBarcode.ViewModels
                 DependencyService.Get<IToast>().Show("Vui lòng chọn các thông tin kho trước khi thực hiện quét!");
                 return;
             }
-            var scanner = new ZXing.Mobile.MobileBarcodeScanner();
-            ZXingScannerView zxing = new ZXingScannerView();
-            ZXing.Result result = null;
-            TimeSpan ts = new TimeSpan(0, 0, 0, 3, 0);
-            Device.StartTimer(ts, () => {
-                if (zxing.IsScanning)
-                    zxing.AutoFocus();
-                return true;
-            });
-            result = await scanner.Scan();
-            if (result == null) return;  
-            string type = result.BarcodeFormat.ToString();
-            if (result != null)
+            if (Device.RuntimePlatform == Device.Android && Xamarin.Essentials.DeviceInfo.Version.Major < 8)
             {
-                DependencyService.Get<ISound>().playBeepSound();
-                MaCode = result.Text;
-                if (!CheckInternet())
+                var scanner = new ZXing.Mobile.MobileBarcodeScanner();
+                ZXingScannerView zxing = new ZXingScannerView();
+                ZXing.Result result = null;
+                TimeSpan ts = new TimeSpan(0, 0, 0, 3, 0);
+                Device.StartTimer(ts, () =>
                 {
+                    if (zxing.IsScanning)
+                        zxing.AutoFocus();
+                    return true;
+                });
+                result = await scanner.Scan();
+                if (result == null) return;
+                string type = result.BarcodeFormat.ToString();
+                if (result != null)
+                {
+                    DependencyService.Get<ISound>().playBeepSound();
+                    ShowResult(result.Text, result.BarcodeFormat.ToString());
+                }
+            }
+            else
+            {
+                App.Current.ModalPopping += HandleModalPopping;
+                _myModalPage = new Page2();
+                await App.Current.MainPage.Navigation.PushModalAsync(_myModalPage);
+            }
+        }
+        private async void HandleModalPopping(object sender, ModalPoppingEventArgs e)
+        {
+            if (e.Modal == _myModalPage)
+            {
+                // now we can retrieve that phone number:
+                var result = _myModalPage.data;
+                var result1 = _myModalPage.format;
+                _myModalPage = null;
+
+                // remember to remove the event handler:
+                App.Current.ModalPopping -= HandleModalPopping;
+                if (result != null && result != "")
+                {
+                    DependencyService.Get<ISound>().playBeepSound();
+                    ShowResult(result, result1);
+                }
+            }
+        }
+
+        private async void ShowResult(string result, string format)
+        {
+            MaCode = result;
+            if (!CheckInternet())
+            {
+                return;
+            }
+            try
+            {
+                ShowLoading("Đang kiểm tra vui lòng đợi");
+                await Task.Delay(200);
+                string data = "";
+                //format.ToUpper() == "QR_CODE" || format.ToUpper() == "QRCODE"
+                //if (!(format.ToUpper() == "CODE_39" || format.ToUpper() == "CODE_128" || format.ToUpper() == "CODE39" || format.ToUpper() == "CODE128"))
+                if (result.Contains("-") || result.Contains("_"))
+                {
+                    DependencyService.Get<IToast>().Show(string.Format("Mã code không hợp lệ. Anh/ chị vui lòng kiểm tra lại!", Title));
+                    HideLoading();
                     return;
                 }
-                try
-                {
-                    ShowLoading("Đang kiểm tra vui lòng đợi");
-                    await Task.Delay(200);
-                    string data = "";
-                    if ((result.BarcodeFormat != ZXing.BarcodeFormat.CODE_39) && (result.BarcodeFormat != ZXing.BarcodeFormat.CODE_128))
-                    {
-                        DependencyService.Get<IToast>().Show(string.Format("Mã code không hợp lệ. Anh/ chị vui lòng kiểm tra lại!", Title));
-                        return;
-                    }
-                    else data = result.Text;
-                    if (data == "")
-                    {
-                        HideLoading();
-                        return;
-                    }
-                    //lấy trạng thái công tơ
-                    var response = await client.GetAsync(Url + "CongTos/" + data);
-                    var responseContent = response.Content.ReadAsStringAsync().Result;
-                    ObservableCollection<CongTo> contents = JsonConvert.DeserializeObject<ObservableCollection<CongTo>>(responseContent);
-                    HideLoading();
-
-                    //check với listOnhand
-                    bool ketqua = false;
-                    listOnHandCheck = listOnHand.Where(o => o.SERIAL_NUMBER == data).FirstOrDefault();
-                    if (contents[0].kho != SelectedKho.MAKHO || contents[0].kho_Phu != SelectedKhoPhu.SECONDARY_INVENTORY_NAME)
-                    {
-                        DependencyService.Get<IToast>().Show(string.Format("VTTB {0} không nằm trong kho đang kiểm kê.", data));
-                    }
-                    else
-                    {
-                        switch (listOnHandCheck.MACL)
-                        {
-                            case "000":
-                                if (contents[0].checkedResult == true) ketqua = true;
-                                break;
-                            case "A70":
-                                if (contents[0].checkedResult == true) ketqua = true;
-                                break;
-                            case "C70":
-                                if (contents[0].checkedResult == null) ketqua = true;
-                                break;
-                            case "D50":
-                                if (contents[0].checkedResult == false) ketqua = true;
-                                break;
-                            default:
-                                break;
-                        }
-                        if (!ketqua)
-                        {
-                            DependencyService.Get<IToast>().Show(string.Format("VTTB {0}: kiểm định {1}.", data, (contents[0].checkedResult == true) ? "Đạt" : (contents[0].checkedResult == false) ? "Không đạt" : "Chưa kiểm định"));
-                            //return;
-                        }
-                    }   
-                    bool itemExists = KKTable.Any(item =>
-                                {
-                                    return (item.MaCode == result.Text);
-                                           //(item.MaKho == SelectedKho.MAKHO) &&
-                                           //(item.MaKhoPhu == SelectedKhoPhu.SECONDARY_INVENTORY_NAME);
-                                });
-                    if (!itemExists)
-                    {
-                        s++;
-                        KiemKeTable dt = new KiemKeTable();
-                        dt.User = UserName;
-                        dt.MaCode = result.Text;
-                        dt.vttB_Status = contents[0].vttB_Status;
-                        dt.MaVTTB = (listOnHandCheck != null) ? listOnHandCheck.SEGMENT1 : contents[0].code_ERP;
-                        dt.MaKho = contents[0].kho;
-                        dt.MaKhoPhu = contents[0].kho_Phu;
-                        dt.NgayKK = DateTime.Now;
-                        dt.STT = s;
-                        dt.CheckedEXDate = (contents[0].checkedEXDate != null) ? contents[0].checkedEXDate.Value.ToString("dd/MM/yyyy") : "";
-                        dt.CheckedResult = (contents[0].checkedResult == true) ? "Đạt" : (contents[0].checkedResult == false) ? "Không đạt" : "Chưa kiểm định";
-                        dt.DVT = (listOnHandCheck != null) ? listOnHandCheck.DVT : "Cái";
-                        dt.SL = (listOnHandCheck != null) ? listOnHandCheck.ON_HAND : "1";
-                        dt.KetQua = ketqua ? "Đã kiểm kê khớp" : "Đã kiểm kê không khớp";
-                        KKTable.Add(dt);
-                    }
-
-                }
-                catch (Exception ex)
+                else data = result;
+                if (data == "")
                 {
                     HideLoading();
+                    return;
                 }
-                finally
+                //lấy trạng thái công tơ
+                var response = await client.GetAsync(Url + "CongTos/" + data);
+                var responseContent = response.Content.ReadAsStringAsync().Result;
+                ObservableCollection<CongTo> contents = JsonConvert.DeserializeObject<ObservableCollection<CongTo>>(responseContent);
+                HideLoading();
+
+                //check với listOnhand
+                bool ketqua = false;
+                listOnHandCheck = listOnHand.Where(o => o.SERIAL_NUMBER == data).FirstOrDefault();
+                if (contents[0].kho != SelectedKho.MAKHO || contents[0].kho_Phu != SelectedKhoPhu.SECONDARY_INVENTORY_NAME)
                 {
+                    DependencyService.Get<IToast>().Show(string.Format("VTTB {0} không nằm trong kho đang kiểm kê.", data));
                 }
+                else
+                {
+                    switch (listOnHandCheck.MACL)
+                    {
+                        case "000":
+                            if (contents[0].checkedResult == true) ketqua = true;
+                            break;
+                        case "A70":
+                            if (contents[0].checkedResult == true) ketqua = true;
+                            break;
+                        case "C70":
+                            if (contents[0].checkedResult == null) ketqua = true;
+                            break;
+                        case "D50":
+                            if (contents[0].checkedResult == false) ketqua = true;
+                            break;
+                        default:
+                            break;
+                    }
+                    if (!ketqua)
+                    {
+                        DependencyService.Get<IToast>().Show(string.Format("VTTB {0}: kiểm định {1}.", data, (contents[0].checkedResult == true) ? "Đạt" : (contents[0].checkedResult == false) ? "Không đạt" : "Chưa kiểm định"));
+                        //return;
+                    }
+                }
+                bool itemExists = KKTable.Any(item =>
+                {
+                    return (item.MaCode == result);
+                    //(item.MaKho == SelectedKho.MAKHO) &&
+                    //(item.MaKhoPhu == SelectedKhoPhu.SECONDARY_INVENTORY_NAME);
+                });
+                if (!itemExists)
+                {
+                    s++;
+                    KiemKeTable dt = new KiemKeTable();
+                    dt.User = UserName;
+                    dt.MaCode = result;
+                    dt.vttB_Status = contents[0].vttB_Status;
+                    dt.MaVTTB = (listOnHandCheck != null) ? listOnHandCheck.SEGMENT1 : contents[0].code_ERP;
+                    dt.MaKho = contents[0].kho;
+                    dt.MaKhoPhu = contents[0].kho_Phu;
+                    dt.NgayKK = DateTime.Now;
+                    dt.STT = s;
+                    dt.CheckedEXDate = (contents[0].checkedEXDate != null) ? contents[0].checkedEXDate.Value.ToString("dd/MM/yyyy") : "";
+                    dt.CheckedResult = (contents[0].checkedResult == true) ? "Đạt" : (contents[0].checkedResult == false) ? "Không đạt" : "Chưa kiểm định";
+                    dt.DVT = (listOnHandCheck != null) ? listOnHandCheck.DVT : "Cái";
+                    dt.SL = (listOnHandCheck != null) ? listOnHandCheck.ON_HAND : "1";
+                    dt.KetQua = ketqua ? "Đã kiểm kê khớp" : "Đã kiểm kê không khớp";
+                    KKTable.Add(dt);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                HideLoading();
+            }
+            finally
+            {
             }
         }
 

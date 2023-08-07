@@ -11,6 +11,7 @@ using System.Windows.Input;
 using VTTBBarcode.Interface;
 using VTTBBarcode.Models;
 using VTTBBarcode.Services;
+using VTTBBarcode.Views;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using ZXing.Net.Mobile.Forms;
@@ -20,6 +21,7 @@ namespace VTTBBarcode.ViewModels
 {
     public class ThongTinViewModel : BaseViewModel
     {
+        Page2 _myModalPage;
         public Command ScanCommand { get; }
         //private DataHandler dataAccess;
         string _maCode;
@@ -59,74 +61,101 @@ namespace VTTBBarcode.ViewModels
         }
         private async void OnScanCLicked(object obj)
         {
-            var scanner = new ZXing.Mobile.MobileBarcodeScanner();
-            ZXingScannerView zxing = new ZXingScannerView();
-            ZXing.Result result = null;
-            TimeSpan ts = new TimeSpan(0, 0, 0, 3, 0);
-            Device.StartTimer(ts, () => {
-                if (zxing.IsScanning)
-                    zxing.AutoFocus();
-                return true;
-            });
-            result = await scanner.Scan();
-            if (result == null) return;  //user bấm back
-            string type = result.BarcodeFormat.ToString();
-            if (result != null)
+            if (Device.RuntimePlatform == Device.Android && Xamarin.Essentials.DeviceInfo.Version.Major < 8)
             {
-                DependencyService.Get<ISound>().playBeepSound();
-                MaCode = result.Text;
-                if (!CheckInternet())
+                var scanner = new ZXing.Mobile.MobileBarcodeScanner();
+                ZXingScannerView zxing = new ZXingScannerView();
+                ZXing.Result result = null;
+                TimeSpan ts = new TimeSpan(0, 0, 0, 3, 0);
+                Device.StartTimer(ts, () =>
                 {
-                    return;
-                }
-                try
+                    if (zxing.IsScanning)
+                        zxing.AutoFocus();
+                    return true;
+                });
+                result = await scanner.Scan();
+                if (result == null) return;  //user bấm back
+                string type = result.BarcodeFormat.ToString();
+                if (result != null)
                 {
-                    ShowLoading("Đang kiểm tra vui lòng đợi");
-                    await Task.Delay(200);
-                    string data = "";
-                    if ((result.BarcodeFormat != ZXing.BarcodeFormat.CODE_39) && (result.BarcodeFormat != ZXing.BarcodeFormat.CODE_128))
-                    {
-                        DependencyService.Get<IToast>().Show(string.Format("Mã code không hợp lệ. Anh/ chị vui lòng kiểm tra lại!", Title));
-                        return;
-                    }
-                    else data = result.Text;
-                    if (data == "")
-                    {
-                        HideLoading();
-                        return;
-                    }
-                    if (UserNameLogin == "ngocntt" && PassLogin == "1245678")
-                    {
-                        HideLoading();
-                        TThaiCTo = "Chưa có lịch sử";
-                        TThaiKDinh = "Chưa kiểm định";
-                    }
-                    else
-                    {
-                        //lấy trạng thái công tơ
-                        var response = await client.GetAsync(Url + "CongTos/" + data);
-                        var responseContent = response.Content.ReadAsStringAsync().Result;
-                        ObservableCollection<CongTo> contents = JsonConvert.DeserializeObject<ObservableCollection<CongTo>>(responseContent);
-                        //lấy lịch sử BĐ
-                        response = await client.GetAsync(Url + "LichSuCToes/" + data);
-                        responseContent = response.Content.ReadAsStringAsync().Result;
-                        LichSuCTo contentsBD = JsonConvert.DeserializeObject<LichSuCTo>(responseContent);
-                        HideLoading();
-                        if ((contents == null) || (contents.Count != 1)) return;
-                        TThaiCTo = contents[0].vttB_Status;
-                        TThaiKDinh = (contents[0].checkedResult == true) ? "Kiểm định đạt" : (contents[0].checkedResult == false) ? "Kiểm định không đạt" : "Chưa kiểm định";
-                        var kq = contentsBD.lichSu.OrderByDescending(a => a.ngaY_BDONG).ToList();
-                        LichSuBD = new ObservableCollection<BDongCTo>(kq);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    HideLoading();
-                }
-                finally
-                {
+                    DependencyService.Get<ISound>().playBeepSound();
+                    ShowResult(result.Text, result.BarcodeFormat.ToString());
                 }
             }
-        }        
+            else
+            {
+                App.Current.ModalPopping += HandleModalPopping;
+                _myModalPage = new Page2();
+                await App.Current.MainPage.Navigation.PushModalAsync(_myModalPage);
+            }
+        }
+
+        private async void HandleModalPopping(object sender, ModalPoppingEventArgs e)
+        {
+            if (e.Modal == _myModalPage)
+            {
+                // now we can retrieve that phone number:
+                var result = _myModalPage.data;
+                var result1 = _myModalPage.format;
+                _myModalPage = null;
+
+                // remember to remove the event handler:
+                App.Current.ModalPopping -= HandleModalPopping;
+                if (result != null && result != "")
+                {
+                    DependencyService.Get<ISound>().playBeepSound();
+                    ShowResult(result, result1);
+                }
+            }
+        }
+
+        private async void ShowResult(string result, string format)
+        {
+            MaCode = result;
+            if (!CheckInternet())
+            {
+                return;
+            }
+            try
+            {
+                ShowLoading("Đang kiểm tra vui lòng đợi");
+                await Task.Delay(200);
+                string data = "";
+                //if (!(format.ToUpper() == "CODE_39" || format.ToUpper() == "CODE_128" || format.ToUpper() == "CODE39" || format.ToUpper() == "CODE128"))
+                if (result.Contains("-") || result.Contains("_"))
+                {
+                    DependencyService.Get<IToast>().Show(string.Format("Mã code không hợp lệ. Anh/ chị vui lòng kiểm tra lại!", Title));
+                    HideLoading();
+                    return;
+                }
+                else data = result;
+                if (data == "")
+                {
+                    HideLoading();
+                    return;
+                }
+                //lấy trạng thái công tơ
+                var response = await client.GetAsync(Url + "CongTos/" + data);
+                var responseContent = response.Content.ReadAsStringAsync().Result;
+                ObservableCollection<CongTo> contents = JsonConvert.DeserializeObject<ObservableCollection<CongTo>>(responseContent);
+                //lấy lịch sử BĐ
+                response = await client.GetAsync(Url + "LichSuCToes/" + data);
+                responseContent = response.Content.ReadAsStringAsync().Result;
+                LichSuCTo contentsBD = JsonConvert.DeserializeObject<LichSuCTo>(responseContent);
+                HideLoading();
+                if ((contents == null) || (contents.Count != 1)) return;
+                TThaiCTo = contents[0].vttB_Status;
+                TThaiKDinh = (contents[0].checkedResult == true) ? "Kiểm định đạt" : (contents[0].checkedResult == false) ? "Kiểm định không đạt" : "Chưa kiểm định";
+                var kq = contentsBD.lichSu.OrderByDescending(a => a.ngaY_BDONG).ToList();
+                LichSuBD = new ObservableCollection<BDongCTo>(kq);
+            }
+            catch (Exception ex)
+            {
+                HideLoading();
+            }
+            finally
+            {
+            }
+        }
     }
 }

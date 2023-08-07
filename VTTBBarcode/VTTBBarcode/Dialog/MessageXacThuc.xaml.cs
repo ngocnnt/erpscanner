@@ -84,10 +84,10 @@ namespace VTTBBarcode.Dialog
             this.PropertyChanged +=
                                   (_, __) => OkCommand.ChangeCanExecute();
             CancelCommand = new Command(OnCloseClicked);
-            loadData(true, true, true, true);
             FormatTextNhap1 = "";
             if (form == "NK")
             {
+                loadData(true, true, true, true);
                 HintNguoiNhan = "Người giao hàng";
                 HintDViNhan = "Đơn vị nhập";
                 HintDienGiai = "Diễn giải";
@@ -98,9 +98,13 @@ namespace VTTBBarcode.Dialog
                 IsVisibleChonDV = true;
                 IsVisibleKhoPhu = true;
                 FormatTextNhap1 = "n0";
+                NguoiNhan = Preferences.Get(InfoPopup1NKSave, "");
+                DienGiai = Preferences.Get(InfoPopup3NKSave, "");
+                TextNhap1 = Preferences.Get(InfoPopup7NKSave, "");
             }
             if (form == "CK")
             {
+                loadData(false, true, true, true);
                 HintNguoiNhan = "Người vận chuyển";
                 HintDienGiai = "Căn cứ";
                 HintKhoPhu = "Kho đến phụ";
@@ -108,9 +112,12 @@ namespace VTTBBarcode.Dialog
                 IsVisibleNhap2 = false;
                 IsVisibleChonDV = false;
                 IsVisibleKhoPhu = true;
+                NguoiNhan = Preferences.Get(InfoPopup1CKSave, "");
+                DienGiai = Preferences.Get(InfoPopup3CKSave, "");
             }
             if (form == "XK")
             {
+                loadData(true, true, true, false);
                 HintNguoiNhan = "Người nhận hàng";
                 HintDViNhan = "Địa chỉ (Bộ phận) nhận";
                 HintDienGiai = "Diễn giải";
@@ -121,6 +128,10 @@ namespace VTTBBarcode.Dialog
                 IsVisibleChonDV = true;
                 IsVisibleKhoPhu = false;
                 FormatTextNhap1 = "";
+                NguoiNhan = Preferences.Get(InfoPopup1XKSave, "");
+                DienGiai = Preferences.Get(InfoPopup3XKSave, "");
+                TextNhap1 = Preferences.Get(InfoPopup7XKSave, "");
+                TextNhap2 = Preferences.Get(InfoPopup8XKSave, "");
             }
             BindingContext = this;
             numericTextBox.Culture = new System.Globalization.CultureInfo("en-US");
@@ -136,24 +147,60 @@ namespace VTTBBarcode.Dialog
         {
             try
             {
-                //tạm thời chưa lưu
-                //Preferences.Set(InfoPopup1, NguoiNhan);
-                //Preferences.Set(InfoPopup2, SelectedDViNhan.DESCRIPTION);
-                //Preferences.Set(InfoPopup3, DienGiai);
-                //Preferences.Set(InfoPopup4, SelectedKhoPhu.ORGANIZATION_CODE);
-                //Preferences.Set(InfoPopup5, SelectedCongTrinh.SEGMENT1);
-                //Preferences.Set(InfoPopup6, SelectedDVTC.SUPPLIER_NUMBER);
-                //Preferences.Set(InfoPopup7, TextNhap1);
-                //Preferences.Set(InfoPopup8, TextNhap2);
-                InfoPopup1 = NguoiNhan;
-                InfoPopup2 = (SelectedDViNhan != null) ? SelectedDViNhan.DESCRIPTION : "";
-                InfoPopup3 = DienGiai;
-                InfoPopup4 = (SelectedKhoPhu != null) ? SelectedKhoPhu.SECONDARY_INVENTORY_NAME : ""; 
-                InfoPopup5 = (SelectedCongTrinh == null) ? "" : ((SelectedCongTrinh.SEGMENT1 == "/") ? "" : SelectedCongTrinh.SEGMENT1);
-                InfoPopup6 = (SelectedDVTC == null) ? "" : ((SelectedDVTC.SUPPLIER_NUMBER == "/") ? "" : SelectedDVTC.SUPPLIER_NUMBER);
-                if (TextNhap1 != null)
-                    InfoPopup7 = string.Format("{0:#,##0.##}", decimal.Parse(TextNhap1));
-                InfoPopup8 = TextNhap2;
+                if (formXN == "NK")
+                {
+                    InfoPopup1NK = NguoiNhan;
+                    InfoPopup2NK = (SelectedDViNhan != null) ? SelectedDViNhan.FLEX_VALUE_MEANING : "";
+                    InfoPopup3NK = DienGiai;
+                    InfoPopup4NK = (SelectedKhoPhu != null) ? SelectedKhoPhu.SECONDARY_INVENTORY_NAME : "";
+                    InfoPopup5NK = (SelectedCongTrinh == null) ? "" : ((SelectedCongTrinh.SEGMENT1 == "/") ? "" : SelectedCongTrinh.SEGMENT1);
+                    InfoPopup6NK = (SelectedDVTC == null) ? "" : ((SelectedDVTC.VENDOR_ID == "/") ? "" : SelectedDVTC.VENDOR_ID);
+                    if (TextNhap1 != null)
+                        InfoPopup7NK = string.Format("{0:#,##0.##}", decimal.Parse(TextNhap1));
+
+                    Preferences.Set(InfoPopup1NKSave, NguoiNhan);
+                    Preferences.Set(InfoPopup2NKSave, (SelectedDViNhan != null) ? JsonConvert.SerializeObject(SelectedDViNhan) : "");
+                    Preferences.Set(InfoPopup3NKSave, DienGiai);
+                    Preferences.Set(InfoPopup4NKSave, (SelectedKhoPhu != null) ? JsonConvert.SerializeObject(SelectedKhoPhu) : "");
+                    Preferences.Set(InfoPopup5NKSave, (SelectedCongTrinh == null) ? "" : ((SelectedCongTrinh.DESCRIPTION == "/") ? "" : JsonConvert.SerializeObject(SelectedCongTrinh)));
+                    Preferences.Set(InfoPopup6NKSave, (SelectedDVTC == null) ? "" : ((SelectedDVTC.VENDOR_NAME == "/") ? "" : JsonConvert.SerializeObject(SelectedDVTC)));
+                    Preferences.Set(InfoPopup7NKSave, TextNhap1);
+                }
+
+                if (formXN == "CK")
+                {
+                    InfoPopup1CK = NguoiNhan;
+                    InfoPopup3CK = DienGiai;
+                    InfoPopup4CK = (SelectedKhoPhu != null) ? SelectedKhoPhu.SECONDARY_INVENTORY_NAME : "";
+                    InfoPopup5CK = (SelectedCongTrinh == null) ? "" : ((SelectedCongTrinh.SEGMENT1 == "/") ? "" : SelectedCongTrinh.SEGMENT1);
+                    InfoPopup6CK = (SelectedDVTC == null) ? "" : ((SelectedDVTC.VENDOR_ID == "/") ? "" : SelectedDVTC.VENDOR_ID);
+
+                    Preferences.Set(InfoPopup1CKSave, NguoiNhan);
+                    Preferences.Set(InfoPopup3CKSave, DienGiai);
+                    Preferences.Set(InfoPopup4CKSave, (SelectedKhoPhu != null) ? JsonConvert.SerializeObject(SelectedKhoPhu) : "");
+                    Preferences.Set(InfoPopup5CKSave, (SelectedCongTrinh == null) ? "" : ((SelectedCongTrinh.DESCRIPTION == "/") ? "" : JsonConvert.SerializeObject(SelectedCongTrinh)));
+                    Preferences.Set(InfoPopup6CKSave, (SelectedDVTC == null) ? "" : ((SelectedDVTC.VENDOR_NAME == "/") ? "" : JsonConvert.SerializeObject(SelectedDVTC)));
+                }
+
+                if (formXN == "XK")
+                {
+                    InfoPopup1XK = NguoiNhan;
+                    InfoPopup2XK = (SelectedDViNhan != null) ? SelectedDViNhan.FLEX_VALUE_MEANING : "";
+                    InfoPopup3XK = DienGiai;
+                    InfoPopup5XK = (SelectedCongTrinh == null) ? "" : ((SelectedCongTrinh.SEGMENT1 == "/") ? "" : SelectedCongTrinh.SEGMENT1);
+                    InfoPopup6XK = (SelectedDVTC == null) ? "" : ((SelectedDVTC.VENDOR_ID == "/") ? "" : SelectedDVTC.VENDOR_ID);
+                    if (TextNhap1 != null)
+                        InfoPopup7XK = string.Format("{0:#,##0.##}", decimal.Parse(TextNhap1));
+                    InfoPopup8XK = TextNhap2;
+                    Preferences.Set(InfoPopup1XKSave, NguoiNhan);
+                    Preferences.Set(InfoPopup2XKSave, (SelectedDViNhan != null) ? JsonConvert.SerializeObject(SelectedDViNhan) : "");
+                    Preferences.Set(InfoPopup3XKSave, DienGiai);
+                    Preferences.Set(InfoPopup5XKSave, (SelectedCongTrinh == null) ? "" : ((SelectedCongTrinh.DESCRIPTION == "/") ? "" : JsonConvert.SerializeObject(SelectedCongTrinh)));
+                    Preferences.Set(InfoPopup6XKSave, (SelectedDVTC == null) ? "" : ((SelectedDVTC.VENDOR_NAME == "/") ? "" : JsonConvert.SerializeObject(SelectedDVTC)));
+                    Preferences.Set(InfoPopup7XKSave, TextNhap1);
+                    Preferences.Set(InfoPopup8XKSave, TextNhap2);
+                }
+
                 await Navigation.PopPopupAsync();
                 _tsk.SetResult(DialogReturn.OK);
             }
@@ -225,6 +272,17 @@ namespace VTTBBarcode.Dialog
                     var output = response.Content.Split('>', '<');
                     listDeparment = JsonConvert.DeserializeObject<ObservableCollection<DanhSachDeparment>>(output[4]);
                     ListDViNhan = listDeparment;
+                    string json = "";
+                    if (formXN == "NK")
+                        json = Preferences.Get(InfoPopup2NKSave, "");
+                    else
+                        json = Preferences.Get(InfoPopup2XKSave, "");
+                    if (json != "")
+                    {
+                        DanhSachDeparment temp = JsonConvert.DeserializeObject<DanhSachDeparment>(json);
+                        if (ListDViNhan.Any(x => x.DESCRIPTION == temp.DESCRIPTION && x.FLEX_VALUE_MEANING == temp.FLEX_VALUE_MEANING))
+                            SelectedDViNhan = temp;
+                    }
                 }
                 if (Projects)
                 {
@@ -243,6 +301,19 @@ namespace VTTBBarcode.Dialog
                     item.DESCRIPTION = "/";
                     listProjects.Insert(0, item);
                     ListCongTrinh = listProjects;
+                    string json = "";
+                    if (formXN == "NK")
+                        json = Preferences.Get(InfoPopup5NKSave, "");
+                    else if (formXN == "CK")
+                        json = Preferences.Get(InfoPopup5CKSave, "");
+                    else
+                        json = Preferences.Get(InfoPopup5XKSave, "");
+                    if (json != "")
+                    {
+                        DanhSachProjects temp = JsonConvert.DeserializeObject<DanhSachProjects>(json);
+                        if (ListCongTrinh.Any(x => x.DESCRIPTION == temp.DESCRIPTION && x.SEGMENT1 == temp.SEGMENT1))
+                            SelectedCongTrinh = temp;
+                    }
                 }
                 if (Vendor)
                 {
@@ -262,8 +333,22 @@ namespace VTTBBarcode.Dialog
                     item1.MA_SO_THUE = "/";
                     item1.ADDRESS = "/";
                     item1.ORG_ID = "/";
+                    item1.VENDOR_ID = "/";
                     listVendor.Insert(0, item1);
                     ListDVTC = listVendor;
+                    string json = "";
+                    if (formXN == "NK")
+                        json = Preferences.Get(InfoPopup6NKSave, "");
+                    else if (formXN == "CK")
+                        json = Preferences.Get(InfoPopup6CKSave, "");
+                    else
+                        json = Preferences.Get(InfoPopup6XKSave, "");
+                    if (json != "")
+                    {
+                        DanhSachVendor temp = JsonConvert.DeserializeObject<DanhSachVendor>(json);
+                        if (ListDVTC.Any(x => x.VENDOR_ID == temp.VENDOR_ID && x.VENDOR_NAME == temp.VENDOR_NAME))
+                            SelectedDVTC = temp;
+                    }
                 }
                 if (Suborg)
                 {
@@ -282,6 +367,20 @@ namespace VTTBBarcode.Dialog
                     ListKhoPhu = listKhoSub;
                     if (ListKhoPhu.Count == 1)
                         SelectedKhoPhu = ListKhoPhu[0];
+                    else
+                    {
+                        string json = "";
+                        if (formXN == "NK")
+                            json = Preferences.Get(InfoPopup4NKSave, "");
+                        else
+                            json = Preferences.Get(InfoPopup4CKSave, "");
+                        if (json != "")
+                        {
+                            DanhSachKhoSub tempp = JsonConvert.DeserializeObject<DanhSachKhoSub>(json);
+                            if (ListKhoPhu.Any(x => x.ORGANIZATION_CODE == tempp.ORGANIZATION_CODE && x.ORGANIZATION_ID == tempp.ORGANIZATION_ID && x.ORGANIZATION_NAME == tempp.ORGANIZATION_NAME && x.SECONDARY_INVENTORY_NAME == tempp.SECONDARY_INVENTORY_NAME))
+                                SelectedKhoPhu = tempp;
+                        }
+                    }
                 }
                 DependencyService.Get<IProcessLoader>().Hide();
             }

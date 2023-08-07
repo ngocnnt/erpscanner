@@ -41,5 +41,6 @@ namespace VTTBBarcode.Models
         public string Column32 { get; set; }
         public string Column33 { get; set; }
         public string Column34 { get; set; }
+        public string Column35 { get; set; }
     }
 }

@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="VTTBBarcode.Views.Page2"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:gv="clr-namespace:BarcodeScanner.Mobile;assembly=BarcodeScanner.Mobile.XamarinForms"    
+    xmlns:gv1="clr-namespace:GoogleVisionBarCodeScanner;assembly=BarcodeScanner.XF"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <ContentPage.Content>
+        <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <StackLayout
+                Grid.Row="0"
+                HorizontalOptions="FillAndExpand"
+                Orientation="Horizontal">
+                <Button
+                    x:Name="CancelButton"
+                    BackgroundColor="#FF0000"
+                    Clicked="CancelButton_Clicked"
+                    CornerRadius="0"
+                    HorizontalOptions="StartAndExpand"
+                    WidthRequest="150"
+                    Text="Cancel"
+                    TextColor="White"
+                    />
+                <Button
+                    x:Name="FlashlightButton"
+                    BackgroundColor="#0075FF"
+                    Clicked="FlashlightButton_Clicked"
+                    CornerRadius="0"
+                    HorizontalOptions="EndAndExpand"
+                    WidthRequest="150"
+                    Text="Flashlight"
+                    TextColor="White"
+                    />
+
+            </StackLayout>
+            <!--  Fill the screen with CameraView  -->
+            <OnPlatform x:TypeArguments="View">
+                <OnPlatform.iOS>
+                    <gv:CameraView HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" OnDetected="Camera_OnDetected" Grid.Row="1"
+                           TorchOn="False" VibrationOnDetected="False" ScanInterval="50" x:Name="Camera" />
+                </OnPlatform.iOS>
+                <OnPlatform.Android>
+                    <gv1:CameraView HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" OnDetected="Camera_OnDetected_1" Grid.Row="1"
+                           DefaultTorchOn="False" VibrationOnDetected="False" ScanInterval="50" x:Name="Camera1" />
+                </OnPlatform.Android>
+            </OnPlatform>
+            
+            <Label
+                Grid.Row="2"
+                FontSize="Medium"
+                HorizontalOptions="FillAndExpand"
+                HorizontalTextAlignment="Center"
+                Text="Đặt mã vạch vào camera để quét"
+                TextColor="Red" />
+        </Grid>
+
+    </ContentPage.Content>
+</ContentPage>
