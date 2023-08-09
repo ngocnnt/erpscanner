@@ -107,40 +107,28 @@ namespace VTTBBarcode.ViewModels
             }
             Device.BeginInvokeOnMainThread(async () =>
             {
-                //if (Device.RuntimePlatform == Device.Android && DeviceInfo.Version.Major < 12)
-                //    Application.Current.MainPage = new AppShell();
-                //else
+                if (Device.RuntimePlatform == Device.Android && DeviceInfo.Version.Major < 8)
+                    Application.Current.MainPage = new AppShell();
+                //else if (Device.RuntimePlatform == Device.Android)
                 //{
                 //    //Ask for permission first
                 //    bool allowed = false;
-                //    allowed = await BarcodeScanner.Mobile.Methods.AskForRequiredPermission();
+                //    allowed = await GoogleVisionBarCodeScanner.Methods.AskForRequiredPermission();
                 //    if (allowed)
                 //        Application.Current.MainPage = new AppShell();
                 //    else
                 //        DependencyService.Get<IToast>().Show("Anh/ chị vui lòng cấp quyền Camera để sử dụng ứng dụng!");
                 //}
-                if (Device.RuntimePlatform == Device.Android && DeviceInfo.Version.Major < 8)
-                    Application.Current.MainPage = new AppShell();
-                else //if (Device.RuntimePlatform == Device.Android)
+                else
                 {
                     //Ask for permission first
                     bool allowed = false;
-                    allowed = await GoogleVisionBarCodeScanner.Methods.AskForRequiredPermission();
+                    allowed = await BarcodeScanner.Mobile.Methods.AskForRequiredPermission();
                     if (allowed)
                         Application.Current.MainPage = new AppShell();
                     else
                         DependencyService.Get<IToast>().Show("Anh/ chị vui lòng cấp quyền Camera để sử dụng ứng dụng!");
                 }
-                //else
-                //{
-                //    //Ask for permission first
-                //    bool allowed = false;
-                //    allowed = await BarcodeScanner.Mobile.Methods.AskForRequiredPermission();
-                //    if (allowed)
-                //        Application.Current.MainPage = new AppShell();
-                //    else
-                //        DependencyService.Get<IToast>().Show("Anh/ chị vui lòng cấp quyền Camera để sử dụng ứng dụng!");
-                //}    
             });
         }
 

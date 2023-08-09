@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.PlatformConfiguration.iOSSpecific;
 using Xamarin.Forms.Xaml;
-//using BarcodeScanner.Mobile;
+using BarcodeScanner.Mobile;
 
 namespace VTTBBarcode.Views
 {
@@ -30,14 +30,15 @@ namespace VTTBBarcode.Views
         {
             //if (Device.RuntimePlatform == Device.Android)
             {
-                GoogleVisionBarCodeScanner.Methods.ToggleFlashlight();
+                //GoogleVisionBarCodeScanner.Methods.ToggleFlashlight();
             } 
-            //else Camera.TorchOn = !Camera.TorchOn;
+            //else
+            Camera.TorchOn = !Camera.TorchOn;
         }
 
-        private void Camera_OnDetected(object sender, BarcodeScanner.Mobile.OnDetectedEventArg e)
+        private void Camera_OnDetected(object sender, OnDetectedEventArg e)
         {
-            List<BarcodeScanner.Mobile.BarcodeResult> obj = e.BarcodeResults;
+            List<BarcodeResult> obj = e.BarcodeResults;
             string result = string.Empty;
             string result1 = string.Empty;
             for (int i = 0; i < obj.Count; i++)
@@ -53,23 +54,23 @@ namespace VTTBBarcode.Views
             });
         }
 
-        private void Camera_OnDetected_1(object sender, GoogleVisionBarCodeScanner.OnDetectedEventArg e)
-        {
-            List<GoogleVisionBarCodeScanner.BarcodeResult> obj = e.BarcodeResults;
-            string result = string.Empty;
-            string result1 = string.Empty;
-            for (int i = 0; i < obj.Count; i++)
-            {
-                result += obj[i].DisplayValue;
-                result1 += obj[i].BarcodeType;
-            }
-            Device.BeginInvokeOnMainThread(async () =>
-            {
-                data = result;
-                format = result1; 
-                //DependencyService.Get<Interface.IToast>().Show(format);
-                await App.Current.MainPage.Navigation.PopModalAsync();
-            });
-        }
+        //private void Camera_OnDetected_1(object sender, GoogleVisionBarCodeScanner.OnDetectedEventArg e)
+        //{
+        //    List<GoogleVisionBarCodeScanner.BarcodeResult> obj = e.BarcodeResults;
+        //    string result = string.Empty;
+        //    string result1 = string.Empty;
+        //    for (int i = 0; i < obj.Count; i++)
+        //    {
+        //        result += obj[i].DisplayValue;
+        //        result1 += obj[i].BarcodeType;
+        //    }
+        //    Device.BeginInvokeOnMainThread(async () =>
+        //    {
+        //        data = result;
+        //        format = result1; 
+        //        //DependencyService.Get<Interface.IToast>().Show(format);
+        //        await App.Current.MainPage.Navigation.PopModalAsync();
+        //    });
+        //}
     }
 }

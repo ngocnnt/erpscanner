@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VTTBBarcode.Android", "VTTB
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VTTBBarcode.iOS", "VTTBBarcode\VTTBBarcode.iOS\VTTBBarcode.iOS.csproj", "{A6698037-15C0-43F4-9E47-CE6C08856BC0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VTTBBarcode", "VTTBBarcode\VTTBBarcode\VTTBBarcode.csproj", "{C7A8BABA-C0A0-42FF-A680-3CE29624FECB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VTTBBarcode", "VTTBBarcode\VTTBBarcode\VTTBBarcode.csproj", "{C7A8BABA-C0A0-42FF-A680-3CE29624FECB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
