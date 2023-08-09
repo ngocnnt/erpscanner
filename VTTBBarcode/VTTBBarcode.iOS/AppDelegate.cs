@@ -33,7 +33,10 @@ namespace VTTBBarcode.iOS
             Syncfusion.SfDataGrid.XForms.iOS.SfDataGridRenderer.Init();
             Syncfusion.XForms.iOS.EffectsView.SfEffectsViewRenderer.Init();
             Syncfusion.XForms.iOS.PopupLayout.SfPopupLayoutRenderer.Init();
-            BarcodeScanner.Mobile.iOS.Initializer.Init();            
+            //BarcodeScanner.Mobile.iOS.Initializer.Init();
+            GoogleVisionBarCodeScanner.iOS.Initializer.Init();
+            Firebase.Core.App.Configure();
+            _ = Firebase.RemoteConfig.RemoteConfig.SharedInstance;
             LoadApplication(new App());
 
             return base.FinishedLaunching(app, options);

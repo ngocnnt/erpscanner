@@ -28,11 +28,11 @@ namespace VTTBBarcode.Views
 
         private void FlashlightButton_Clicked(object sender, EventArgs e)
         {
-            if (Device.RuntimePlatform == Device.Android)
+            //if (Device.RuntimePlatform == Device.Android)
             {
                 GoogleVisionBarCodeScanner.Methods.ToggleFlashlight();
             } 
-            else Camera.TorchOn = !Camera.TorchOn;
+            //else Camera.TorchOn = !Camera.TorchOn;
         }
 
         private void Camera_OnDetected(object sender, BarcodeScanner.Mobile.OnDetectedEventArg e)

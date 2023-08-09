@@ -42,7 +42,7 @@
 
             </StackLayout>
             <!--  Fill the screen with CameraView  -->
-            <OnPlatform x:TypeArguments="View">
+            <!--<OnPlatform x:TypeArguments="View">
                 <OnPlatform.iOS>
                     <gv:CameraView HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" OnDetected="Camera_OnDetected" Grid.Row="1"
                            TorchOn="False" VibrationOnDetected="False" ScanInterval="50" x:Name="Camera" />
@@ -51,8 +51,9 @@
                     <gv1:CameraView HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" OnDetected="Camera_OnDetected_1" Grid.Row="1"
                            DefaultTorchOn="False" VibrationOnDetected="False" ScanInterval="50" x:Name="Camera1" />
                 </OnPlatform.Android>
-            </OnPlatform>
-            
+            </OnPlatform>-->
+            <gv1:CameraView HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" OnDetected="Camera_OnDetected_1" Grid.Row="1"
+                           DefaultTorchOn="False" VibrationOnDetected="False" ScanInterval="50" x:Name="Camera1" />
             <Label
                 Grid.Row="2"
                 FontSize="Medium"

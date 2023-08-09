@@ -121,7 +121,7 @@ namespace VTTBBarcode.ViewModels
                 //}
                 if (Device.RuntimePlatform == Device.Android && DeviceInfo.Version.Major < 8)
                     Application.Current.MainPage = new AppShell();
-                else if (Device.RuntimePlatform == Device.Android)
+                else //if (Device.RuntimePlatform == Device.Android)
                 {
                     //Ask for permission first
                     bool allowed = false;
@@ -131,16 +131,16 @@ namespace VTTBBarcode.ViewModels
                     else
                         DependencyService.Get<IToast>().Show("Anh/ chị vui lòng cấp quyền Camera để sử dụng ứng dụng!");
                 }
-                else
-                {
-                    //Ask for permission first
-                    bool allowed = false;
-                    allowed = await BarcodeScanner.Mobile.Methods.AskForRequiredPermission();
-                    if (allowed)
-                        Application.Current.MainPage = new AppShell();
-                    else
-                        DependencyService.Get<IToast>().Show("Anh/ chị vui lòng cấp quyền Camera để sử dụng ứng dụng!");
-                }    
+                //else
+                //{
+                //    //Ask for permission first
+                //    bool allowed = false;
+                //    allowed = await BarcodeScanner.Mobile.Methods.AskForRequiredPermission();
+                //    if (allowed)
+                //        Application.Current.MainPage = new AppShell();
+                //    else
+                //        DependencyService.Get<IToast>().Show("Anh/ chị vui lòng cấp quyền Camera để sử dụng ứng dụng!");
+                //}    
             });
         }
 
